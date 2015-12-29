@@ -1,18 +1,18 @@
-// Write your Javascript code.
-
 (function () {
     'use strict';
 
-    var app = angular.module('ConsoleNotepad', [
+    
+})();
+
+var app = angular.module('ConsoleNotepad', [
         // Angular modules 
         'ngRoute'
 
         // Custom modules 
 
         // 3rd Party Modules
-        
-    ]);
-})();
+
+]);
 
 app.controller('editorController', function ($scope) {
     $scope.test = 'Yeah, works';

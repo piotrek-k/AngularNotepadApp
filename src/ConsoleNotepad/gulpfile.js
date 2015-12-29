@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='copy, min' Clean='clean' />
+﻿/// <binding BeforeBuild='all' Clean='clean' />
 "use strict";
 
 var gulp = require("gulp"),
@@ -24,11 +24,15 @@ gulp.task("clean:js", function (cb) {
     rimraf(paths.concatJsDest, cb);
 });
 
+gulp.task("clean:jsunminified", function (cb) {
+    rimraf(paths.concatJsDestUnminified, cb);
+});
+
 gulp.task("clean:css", function (cb) {
     rimraf(paths.concatCssDest, cb);
 });
 
-gulp.task("clean", ["clean:js", "clean:css"]);
+gulp.task("clean", ["clean:js", "clean:css", "clean:jsunminified"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js'], { base: "." })
@@ -44,7 +48,7 @@ gulp.task("min:css", function () {
         .pipe(gulp.dest("."));
 });
 
-gulp.task("min", ["min:js", "min:css", "copy:angularviews"]);
+gulp.task("min", ["min:js", "min:css"]);
 
 gulp.task("copy:angularviews", function () {
     return gulp.src(['./AngularPart/**/**/*.html'])
