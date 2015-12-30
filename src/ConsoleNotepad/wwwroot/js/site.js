@@ -31,5 +31,15 @@ app.factory('notes', ['$http', function ($http) {
                   });
     }
 
+    notes.getSuggested = function (searchText) {
+        return $http.get('/api/notes/suggest/' + searchText)
+                  .success(function (data) {
+                      return data;
+                  })
+                  .error(function (err) {
+                      return err;
+                  });
+    }
+
     return notes;
 }]);

@@ -42,7 +42,9 @@ namespace ConsoleNotepad
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                    options.UseSqlServer(Configuration["Data:DefaultConnection:AuthConnectionString"]))
+                .AddDbContext<DataDbContext>(options =>
+                    options.UseSqlServer(Configuration["Data:DefaultConnection:DataConnectionString"]));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
