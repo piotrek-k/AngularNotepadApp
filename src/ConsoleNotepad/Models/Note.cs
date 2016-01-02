@@ -23,13 +23,23 @@ namespace ConsoleNotepad.Models
         [NotMapped]
         public string TagsToAdd { get; set; }
 
-        public string TagsAsSingleString {
+        [NotMapped]
+        public string TagsAsSingleString
+        {
             get
             {
                 string result = "";
-                foreach(var nt in NoteTags)
+                var tags = this.NoteTags.Select(x => x.Tag);
+                //if (NoteTags != null)
+                //{
+                //    foreach (var nt in NoteTags)
+                //    {
+                //        result += nt.Tag.Name + " ";
+                //    }
+                //}
+                foreach (var t in tags)
                 {
-                    result += nt.Tag.Name + " ";
+                    result += t.Name + " ";
                 }
                 return result;
             }

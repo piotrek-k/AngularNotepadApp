@@ -8,8 +8,8 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations.DataDb
 {
     [DbContext(typeof(DataDbContext))]
-    [Migration("20151230105341_DbData")]
-    partial class DbData
+    [Migration("20160102120952_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

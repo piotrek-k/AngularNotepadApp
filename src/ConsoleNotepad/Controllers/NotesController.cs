@@ -25,12 +25,24 @@ namespace ConsoleNotepad.Controllers
         {
             return db.Notes;
         }
-
-        [HttpGet("/suggest/{searchText}", Name = "Suggest")]
+         
+        //[Route("/api/Notes/suggest/{searchText}")]
+        [HttpGet("/api/notes/suggested", Name = "GetSuggested")]
         public IEnumerable<Note> GetSuggestedNotes(string searchText)
         {
-            //TODO: Podpowiedzi przy wpisywaniu tytu³u
-            return db.Notes;
+            //JsonResult result = null;
+            //try {
+            //    var dbQuery = db.Notes.Include(x => x.NoteTags).ToList();
+            //    result = Json(dbQuery);
+            //}
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //}
+            //return Ok(result.Value);
+            var dataToList = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
+            var data = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag);
+            return data;
         }
 
         // GET: api/Notes/5

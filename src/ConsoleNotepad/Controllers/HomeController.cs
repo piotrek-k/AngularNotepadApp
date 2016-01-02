@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using ConsoleNotepad.Models;
+using Microsoft.Data.Entity;
 
 namespace ConsoleNotepad.Controllers
 {
     public class HomeController : Controller
     {
+        private DataDbContext db;
+
+        public HomeController(DataDbContext context)
+        {
+            db = context;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -15,6 +24,7 @@ namespace ConsoleNotepad.Controllers
 
         public IActionResult Notepad()
         {
+            var a = db.Notes.Include(x => x.NoteTags).ToList();
             return View();
         }
 
