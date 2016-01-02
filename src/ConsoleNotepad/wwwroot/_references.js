@@ -3,6 +3,7 @@
 /// <reference path="../angularpart/app.routes.js" />
 /// <reference path="../angularpart/components/noteseditor/editorcontroller.js" />
 /// <reference path="../angularpart/components/noteseditor/editorservice.js" />
+/// <reference path="../angularpart/shared/contenteditablr.js" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="js/site.min.js" />
 /// <reference path="lib/angular/angular.js" />

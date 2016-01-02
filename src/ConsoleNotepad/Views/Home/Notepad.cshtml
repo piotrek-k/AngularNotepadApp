@@ -6,4 +6,10 @@
 
 <div ng-controller="editorController">
     {{test}}
+    <div id="smartBar" contenteditable="true" ng-model="smartBar" ng-keydown="refresh($event)">Teskst</div>
+    <code>{{smartBar}}</code>
+    <code>{{suggestions}}</code>
+    <div ng-repeat="sg in suggestions">
+        <p ng-repeat="tag in sg.NoteTags">{{tag}}</p>
+    </div>
 </div>

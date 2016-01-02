@@ -13,13 +13,13 @@
     }
 
     notes.getSuggested = function (searchText) {
-        return $http.get('/api/notes/suggest/' + searchText)
-                  .success(function (data) {
-                      return data;
-                  })
-                  .error(function (err) {
-                      return err;
-                  });
+        return $http.get('/api/notes/suggested?searchText=' + searchText);
+                  //.success(function (data) {
+                  //    return data;
+                  //})
+                  //.error(function (err) {
+                  //    return err;
+                  //});
     }
 
     notes.post = function (keywords) {
