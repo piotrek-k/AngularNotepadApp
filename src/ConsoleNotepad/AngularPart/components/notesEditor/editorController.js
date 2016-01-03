@@ -20,5 +20,16 @@
             event.preventDefault();
             $scope.highlightedSuggestion--;
         }
+
+        if (event.keyCode == 13 && $scope.highlightedSuggestion > -1) { //enter
+            //uzupełnij inputa, zacznij pisanie notatki
+            $scope.smartBar = "";
+            console.table($scope.suggestions[$scope.highlightedSuggestion].NoteTags);
+            for (var nt in $scope.suggestions[$scope.highlightedSuggestion].NoteTags) {
+                //console.log(nt);
+                $scope.smartBar += $scope.suggestions[$scope.highlightedSuggestion].NoteTags[nt].Tag.Name + " ";
+            }
+            
+        }
     }
 });
