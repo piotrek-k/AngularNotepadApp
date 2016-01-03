@@ -12,7 +12,7 @@ namespace ConsoleNotepad.Models
             NoteTags = new HashSet<NoteTag>();
         }
 
-        public int ID { get; set; }
+        public int TagId { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<NoteTag> NoteTags { get; set; }

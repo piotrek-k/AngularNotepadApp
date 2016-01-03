@@ -5,6 +5,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using ConsoleNotepad.Models;
 using System;
+using Newtonsoft.Json;
 
 namespace ConsoleNotepad.Controllers
 {
@@ -28,21 +29,35 @@ namespace ConsoleNotepad.Controllers
          
         //[Route("/api/Notes/suggest/{searchText}")]
         [HttpGet("/api/notes/suggested", Name = "GetSuggested")]
-        public IEnumerable<Note> GetSuggestedNotes(string searchText)
+        public IActionResult GetSuggestedNotes(string searchText)
         {
-            //JsonResult result = null;
-            //try {
-            //    var dbQuery = db.Notes.Include(x => x.NoteTags).ToList();
-            //    result = Json(dbQuery);
-            //}
-            //catch(Exception e)
+            string[] separators = { " " };
+            List<string> tags = searchText.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            //var allNotes = db.Notes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag))).Include(x => x.NoteTags).ThenInclude(x => x.Tag);
+            var allNotes = db.Notes;
+                //.Include(x => x.NoteTags).ThenInclude(x => x.Tag);
+            var allNotes2 = allNotes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag)));
+            //var allNotes2 = allNotes.Where(x => x);
+
+            var dataToList = allNotes2.ToList();
+
+            //List<NoteTag> convertedToNT = new List<NoteTag>();
+            //foreach(var t in tags)
             //{
-            //    Console.WriteLine(e);
+            //    convertedToNT.Add(new NoteTag
+            //    {
+            //        Tag = new Tag { Name = t }
+            //    });
             //}
-            //return Ok(result.Value);
-            var dataToList = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
-            var data = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag);
-            return data;
+            //var dataToList1 = db.Notes.Where(x => tags.All(y => x.NoteTags.Any(z => z.Tag.Name == y)));
+            //var test = dataToList1.ToList();
+            //var dataToList = dataToList1.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
+
+            return Ok(JsonConvert.SerializeObject(dataToList, Formatting.Indented, new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            }));
         }
 
         // GET: api/Notes/5
@@ -54,7 +69,7 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            Note note = db.Notes.Single(m => m.ID == id);
+            Note note = db.Notes.Single(m => m.NoteId == id);
 
             if (note == null)
             {
@@ -75,14 +90,14 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            if (id != note.ID)
+            if (id != note.NoteId)
             {
                 return HttpBadRequest();
             }
 
             //db.Entry(note).State = EntityState.Modified;
 
-            Note noteInDb = db.Notes.FirstOrDefault(x => x.ID == note.ID);
+            Note noteInDb = db.Notes.FirstOrDefault(x => x.NoteId == note.NoteId);
             if (note.TagsToAdd != "" && note.TagsToAdd != null)
             {
                 noteInDb.NoteTags = new List<NoteTag>();
@@ -151,7 +166,7 @@ namespace ConsoleNotepad.Controllers
             }
             catch (DbUpdateException)
             {
-                if (NoteExists(note.ID))
+                if (NoteExists(note.NoteId))
                 {
                     return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -161,7 +176,7 @@ namespace ConsoleNotepad.Controllers
                 }
             }
 
-            return CreatedAtRoute("GetNote", new { id = note.ID }, note);
+            return CreatedAtRoute("GetNote", new { id = note.NoteId }, note);
         }
 
         // DELETE: api/Notes/5
@@ -173,7 +188,7 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            Note note = db.Notes.Single(m => m.ID == id);
+            Note note = db.Notes.Single(m => m.NoteId == id);
             if (note == null)
             {
                 return HttpNotFound();
@@ -196,7 +211,7 @@ namespace ConsoleNotepad.Controllers
 
         private bool NoteExists(int id)
         {
-            return db.Notes.Count(e => e.ID == id) > 0;
+            return db.Notes.Count(e => e.NoteId == id) > 0;
         }
     }
 }

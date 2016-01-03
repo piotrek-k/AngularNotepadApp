@@ -8,8 +8,8 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations.DataDb
 {
     [DbContext(typeof(DataDbContext))]
-    [Migration("20160102120952_first")]
-    partial class first
+    [Migration("20160103130644_newmigration")]
+    partial class newmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,12 +19,12 @@ namespace ConsoleNotepad.Migrations.DataDb
 
             modelBuilder.Entity("ConsoleNotepad.Models.Note", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("NoteId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("CreationDate");
 
-                    b.HasKey("ID");
+                    b.HasKey("NoteId");
                 });
 
             modelBuilder.Entity("ConsoleNotepad.Models.NoteTag", b =>
@@ -54,12 +54,12 @@ namespace ConsoleNotepad.Migrations.DataDb
 
             modelBuilder.Entity("ConsoleNotepad.Models.Tag", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("TagId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
-                    b.HasKey("ID");
+                    b.HasKey("TagId");
                 });
 
             modelBuilder.Entity("ConsoleNotepad.Models.NoteTag", b =>

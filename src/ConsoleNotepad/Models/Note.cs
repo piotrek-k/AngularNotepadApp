@@ -15,7 +15,7 @@ namespace ConsoleNotepad.Models
             Parts = new HashSet<Part>();
         }
 
-        public int ID { get; set; }
+        public int NoteId { get; set; }
         public virtual ICollection<NoteTag> NoteTags { get; set; }
         public virtual ICollection<Part> Parts { get; set; }
         public DateTime? CreationDate { get; set; }
@@ -29,17 +29,15 @@ namespace ConsoleNotepad.Models
             get
             {
                 string result = "";
-                var tags = this.NoteTags.Select(x => x.Tag);
-                //if (NoteTags != null)
-                //{
-                //    foreach (var nt in NoteTags)
-                //    {
-                //        result += nt.Tag.Name + " ";
-                //    }
-                //}
-                foreach (var t in tags)
+                if (NoteTags != null)
                 {
-                    result += t.Name + " ";
+                    foreach (var nt in NoteTags)
+                    {
+                        if (nt.Tag != null)
+                        {
+                            result += nt.Tag.Name + " ";
+                        }
+                    }
                 }
                 return result;
             }

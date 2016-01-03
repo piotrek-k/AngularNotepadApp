@@ -5,7 +5,7 @@ using Microsoft.Data.Entity.Metadata;
 
 namespace ConsoleNotepad.Migrations.DataDb
 {
-    public partial class first : Migration
+    public partial class newmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,25 +13,25 @@ namespace ConsoleNotepad.Migrations.DataDb
                 name: "Note",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    NoteId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Note", x => x.ID);
+                    table.PrimaryKey("PK_Note", x => x.NoteId);
                 });
             migrationBuilder.CreateTable(
                 name: "Tag",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    TagId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tag", x => x.ID);
+                    table.PrimaryKey("PK_Tag", x => x.TagId);
                 });
             migrationBuilder.CreateTable(
                 name: "Part",
@@ -51,7 +51,7 @@ namespace ConsoleNotepad.Migrations.DataDb
                         name: "FK_Part_Note_NoteID",
                         column: x => x.NoteID,
                         principalTable: "Note",
-                        principalColumn: "ID",
+                        principalColumn: "NoteId",
                         onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateTable(
@@ -68,13 +68,13 @@ namespace ConsoleNotepad.Migrations.DataDb
                         name: "FK_NoteTag_Note_NoteId",
                         column: x => x.NoteId,
                         principalTable: "Note",
-                        principalColumn: "ID",
+                        principalColumn: "NoteId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_NoteTag_Tag_TagId",
                         column: x => x.TagId,
                         principalTable: "Tag",
-                        principalColumn: "ID",
+                        principalColumn: "TagId",
                         onDelete: ReferentialAction.Cascade);
                 });
         }
