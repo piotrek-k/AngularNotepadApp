@@ -13,7 +13,15 @@
     }
 
     notes.getSuggested = function (searchText) {
-        return $http.get('/api/notes/suggested?searchText=' + searchText);
+        //return $http.get('/api/notes/suggested?searchText=' + searchText);
+
+        return $http({
+            method: 'GET',
+            url: '/api/notes/suggested?searchText=' + searchText,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
                   //.success(function (data) {
                   //    return data;
                   //})

@@ -46,16 +46,26 @@ app.directive('contenteditable', function () {
     };
 });
 app.controller('editorController', function ($scope, notes) {
-    $scope.test = 'Yeah, works';
     $scope.suggestions = {};
+    $scope.highlightedSuggestion = -1;
 
-    $scope.refresh = function (event) {
+    $scope.smartBarKeyDown = function (event) {
         console.log("Refresh " + event.keyCode)
         if (event.keyCode == 32) {
             $scope.suggestions = notes.getSuggested($scope.smartBar).success(function (data) {
+                console.table(data);
                 $scope.suggestions = data;
             });
             console.log("Refreshed");
+        }
+
+        if (event.keyCode == 40 && $scope.highlightedSuggestion < $scope.suggestions.length-1) { //arrow down
+            event.preventDefault();
+            $scope.highlightedSuggestion++;
+        }
+        if (event.keyCode == 38 && $scope.highlightedSuggestion > -1) { //arrow up
+            event.preventDefault();
+            $scope.highlightedSuggestion--;
         }
     }
 });
@@ -74,7 +84,15 @@ app.factory('notes', ['$http', function ($http) {
     }
 
     notes.getSuggested = function (searchText) {
-        return $http.get('/api/notes/suggested?searchText=' + searchText);
+        //return $http.get('/api/notes/suggested?searchText=' + searchText);
+
+        return $http({
+            method: 'GET',
+            url: '/api/notes/suggested?searchText=' + searchText,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
                   //.success(function (data) {
                   //    return data;
                   //})

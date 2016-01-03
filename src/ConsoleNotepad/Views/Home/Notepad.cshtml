@@ -5,11 +5,20 @@
 }
 
 <div ng-controller="editorController">
-    {{test}}
-    <div id="smartBar" contenteditable="true" ng-model="smartBar" ng-keydown="refresh($event)">Teskst</div>
-    <code>{{smartBar}}</code>
-    <code>{{suggestions}}</code>
-    <div ng-repeat="sg in suggestions">
-        <p ng-repeat="tag in sg.NoteTags">{{tag}}</p>
-    </div>
+    <div id="smartBar" contenteditable="true" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)">Teskst</div>
+    <!--<code>{{smartBar}}</code>-->
+    <!--<code>{{suggestions}}</code>-->
+    <table>
+        <tr ng-repeat="sg in suggestions" ng-class="{yellow: $index == highlightedSuggestion}">
+            <td>*</td>
+            <td ng-repeat="nt in sg.NoteTags">
+                
+                {{$index}}
+                {{nt.Tag.Name}}
+            </td>
+        </tr>
+    </table>
+    <code>highlightedSuggestion {{highlightedSuggestion}}</code>
+    <code>sugg length {{suggestions.length}}</code>
+    <code>{{highlightedSuggestion < suggestions.length}}</code>
 </div>
