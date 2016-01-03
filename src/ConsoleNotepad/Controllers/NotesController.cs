@@ -26,37 +26,56 @@ namespace ConsoleNotepad.Controllers
         {
             return db.Notes;
         }
-         
+
         //[Route("/api/Notes/suggest/{searchText}")]
         [HttpGet("/api/notes/suggested", Name = "GetSuggested")]
         public IActionResult GetSuggestedNotes(string searchText)
         {
+            /*
+            * Dzia³a to tak: zwracane s¹ wszystkie notatki, które maj¹ przypisane wszystkie z podanych tagów
+            */
+
             string[] separators = { " " };
             List<string> tags = searchText.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            //var allNotes = db.Notes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag))).Include(x => x.NoteTags).ThenInclude(x => x.Tag);
-            var allNotes = db.Notes;
-                //.Include(x => x.NoteTags).ThenInclude(x => x.Tag);
-            var allNotes2 = allNotes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag)));
-            //var allNotes2 = allNotes.Where(x => x);
+            /*
+            * Poni¿sze rozwi¹zanie jest skrajnie chujowe i wymaga poprawki, ale nic innego nie dzia³a³o. Trzeba poczekaæ na lepsz¹ edycjê EF7
+            * Tak to powinno w teorii wygl¹daæ:
+            * var allNotes = db.Notes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag))).Include(x => x.NoteTags).ThenInclude(x => x.Tag);
+            * Niestety “Sequence contains more than one element” cokolwiek to kurwa znaczy
+            */
 
-            var dataToList = allNotes2.ToList();
-
-            //List<NoteTag> convertedToNT = new List<NoteTag>();
-            //foreach(var t in tags)
-            //{
-            //    convertedToNT.Add(new NoteTag
-            //    {
-            //        Tag = new Tag { Name = t }
-            //    });
-            //}
-            //var dataToList1 = db.Notes.Where(x => tags.All(y => x.NoteTags.Any(z => z.Tag.Name == y)));
-            //var test = dataToList1.ToList();
-            //var dataToList = dataToList1.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
-
-            return Ok(JsonConvert.SerializeObject(dataToList, Formatting.Indented, new JsonSerializerSettings
+            var allNotes = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
+            List<Note> finalNotes = new List<Note>();
+            foreach (var note in allNotes)
             {
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                bool allOfThem = true; //note has all of given tags
+                foreach (var tag in tags)
+                {
+                    bool tagExists = false; //tag is in note
+                    foreach(var notetag in note.NoteTags)
+                    {
+                        if(notetag.Tag.Name == tag)
+                        {
+                            tagExists = true;
+                            break;
+                        }
+                    }
+                    if(tagExists == false)
+                    {
+                        allOfThem = false;
+                        break;
+                    }
+                }
+                if (allOfThem == true)
+                {
+                    finalNotes.Add(note);
+                }
+            }
+
+            return Ok(JsonConvert.SerializeObject(finalNotes, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
         }
 

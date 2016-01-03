@@ -5,7 +5,7 @@ using Microsoft.Data.Entity.Metadata;
 
 namespace ConsoleNotepad.Migrations.DataDb
 {
-    public partial class newmigration : Migration
+    public partial class nextMg : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -8,8 +8,8 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations.DataDb
 {
     [DbContext(typeof(DataDbContext))]
-    [Migration("20160103130644_newmigration")]
-    partial class newmigration
+    [Migration("20160103184333_nextMg")]
+    partial class nextMg
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
