@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='all' Clean='clean' />
+﻿/// <binding BeforeBuild='all' Clean='clean' ProjectOpened='copyAfterEachChange' />
 "use strict";
 
 var gulp = require("gulp"),
@@ -62,5 +62,9 @@ gulp.task("copy:js", function () {
 });
 
 gulp.task("copy", ["copy:js", "copy:angularviews"]);
+
+gulp.task('copyAfterEachChange', function () {
+    gulp.watch([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js', './AngularPart/**/**/*.html'], ['copy']);
+});
 
 gulp.task("all", ["clean", "min", "copy"]);
