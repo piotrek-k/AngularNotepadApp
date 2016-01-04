@@ -18,7 +18,19 @@
             </td>
         </tr>
     </table>
+    <div id="noteParts">
+        <div class="notePart" ng-repeat="p in parts">
+            <div ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="part{{$index}}">test</div>
+            @*{{p.Data}}*@
+        </div>
+        @*<div class="notePart">
+            >
+            <div ng-model="nextPart.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event)">test</div>
+        </div>*@
+    </div>
     <code>highlightedSuggestion {{highlightedSuggestion}}</code>
     <code>sugg length {{suggestions.length}}</code>
     <code>{{highlightedSuggestion < suggestions.length}}</code>
+    <code>noteId {{currentNoteId}}</code>
+    <code>{{parts}}</code>
 </div>

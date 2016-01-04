@@ -33,6 +33,14 @@ textarea {
     }
 }
 
+/*
+    W notepadzie
+*/
+
 .yellow {
     background-color: yellow;
+}
+
+.notePart {
+    border: solid 1px black;
 }
