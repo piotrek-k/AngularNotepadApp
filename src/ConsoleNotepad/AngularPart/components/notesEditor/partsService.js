@@ -3,7 +3,6 @@
     var parts = {};
 
     parts.get = function (idOfNote) {
-        //TODO
         return $http({
             method: 'GET',
             url: '/api/parts?idOfNote=' + idOfNote,
@@ -14,28 +13,29 @@
     }
 
     parts.post = function (nextPart) {
-        console.log("nextPart:");
-        console.table(nextPart);
-        //TODO
-        //return $http.get('/api/notes/', { TagsToAdd: keywords })
-        //          .success(function (data) {
-        //              return data;
-        //          })
-        //          .error(function (err) {
-        //              return err;
-        //          });
+        //console.log("nextPart:");
+        //console.table(nextPart);
+        return $http({
+            method: 'POST',
+            url: '/api/Parts',
+            data: nextPart,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
     }
 
     parts.put = function (part) {
+        //console.log("Updating...");
         //console.table(part);
-        //TODO
-        //return $http.get('/api/notes/', note)
-        //          .success(function (data) {
-        //              return data;
-        //          })
-        //          .error(function (err) {
-        //              return err;
-        //          });
+        return $http({
+            method: 'PUT',
+            url: '/api/Parts/'+part.ID,
+            data: part,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
     }
 
     return parts;

@@ -23,15 +23,16 @@
         });
     }
 
-    notes.post = function (keywords) {
+    notes.post = function (data) {
         //TODO
-        //return $http.get('/api/notes/', { TagsToAdd: keywords })
-        //          .success(function (data) {
-        //              return data;
-        //          })
-        //          .error(function (err) {
-        //              return err;
-        //          });
+        //return $http({
+        //    method: 'POST',
+        //    url: '/api/Parts',
+        //    data: data,
+        //    headers: {
+        //        'Accept': 'application/json'
+        //    }
+        //});
     }
 
     notes.put = function (note) {

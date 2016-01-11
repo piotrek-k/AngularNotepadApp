@@ -20,7 +20,10 @@
     </table>
     <div id="noteParts">
         <div class="notePart" ng-repeat="p in parts">
-            <div ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="part{{$index}}">test</div>
+            <div ng-if="p.localState=='OK'">OK</div>
+            <div ng-if="p.localState=='Sending'">Sending...</div>
+            <div ng-if="p.localState=='Problem'">Couldn't send...</div>
+            <div ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="part{{$index}}">{{p.Data}}</div>
             @*{{p.Data}}*@
         </div>
         @*<div class="notePart">
