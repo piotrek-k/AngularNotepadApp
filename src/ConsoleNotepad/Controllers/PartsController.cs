@@ -21,10 +21,10 @@ namespace ConsoleNotepad.Controllers
 
         // GET: api/Parts
         [HttpGet]
-        public IEnumerable<Part> GetParts(int idOfNote)
+        public IActionResult GetParts(int idOfNote)
         {
             var data = _context.Parts.Where(x => x.NoteID == idOfNote).ToList();
-            return data;
+            return Ok(data);
         }
 
         // GET: api/Parts/5

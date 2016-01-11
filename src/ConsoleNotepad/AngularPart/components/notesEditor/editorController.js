@@ -21,7 +21,7 @@
             console.log("Suggestions refreshed");
         }
 
-        if (event.keyCode == 40 && $scope.highlightedSuggestion < $scope.suggestions.length-1) { //arrow down
+        if (event.keyCode == 40 && $scope.highlightedSuggestion < $scope.suggestions.length - 1) { //arrow down
             //sterowanie po menu
             event.preventDefault();
             $scope.highlightedSuggestion++;
@@ -31,27 +31,44 @@
             $scope.highlightedSuggestion--;
         }
 
-        if (event.keyCode == 13 && $scope.highlightedSuggestion > -1) { //enter
+        if (event.keyCode == 13) { //enter // && $scope.highlightedSuggestion > -1
             //uzupełnij inputa, zacznij pisanie notatki
             //console.table($scope.suggestions[$scope.highlightedSuggestion].NoteTags);
 
-            $scope.smartBar = "";
+            if ($scope.highlightedSuggestion != -1) {
+                $scope.smartBar = "";
 
-            var note = $scope.suggestions[$scope.highlightedSuggestion];
-            console.table(note);
+                var note = $scope.suggestions[$scope.highlightedSuggestion];
+                console.table(note);
 
-            //uzupelniam smartBar o wybrane tagi
-            for (var nt in note.NoteTags) {
-                $scope.smartBar += note.NoteTags[nt].Tag.Name + " ";
+                //uzupelniam smartBar o wybrane tagi
+                for (var nt in note.NoteTags) {
+                    $scope.smartBar += note.NoteTags[nt].Tag.Name + " ";
+                }
+
+                $scope.currentNoteId = note.NoteId;
+
+                $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+                    $scope.parts = data;
+                    console.log("Got data: ");
+                    console.table(data);
+                    partsCheckForNull();
+                });
             }
+            else {
+                //nie wybrano nic z listy, trzeba więc zdobyć ID wpisanej notatki
+                var note = notes.getByTag($scope.smartBar).success(function (noteData) {
+                    console.table(noteData);
+                    $scope.currentNoteId = noteData.NoteId;
 
-            $scope.currentNoteId = note.NoteId;
-            $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                $scope.parts = data;
-                console.log("Got data: ");
-                console.table(data);
-                partsCheckForNull();
-            });
+                    $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+                        $scope.parts = data;
+                        console.log("Got data: ");
+                        console.table(data);
+                        partsCheckForNull();
+                    });
+                });        
+            }
 
         }
     }
@@ -72,7 +89,7 @@
         }
 
     }
-    
+
     function updatePart(index) {
 
         $scope.parts[index].localState = "Sending";
@@ -107,10 +124,8 @@
     }
 
     function partsCheckForNull() {
-
         if ($scope.parts.length == 0 || $scope.parts == null) {
             addPart();
         }
-
     }
 });

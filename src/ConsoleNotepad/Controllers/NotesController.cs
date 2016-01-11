@@ -79,6 +79,66 @@ namespace ConsoleNotepad.Controllers
             }));
         }
 
+        [HttpGet("/api/notes/bytags", Name = "GetByTags")]
+        public IActionResult GetNoteByTags(string searchText)
+        {
+            /*
+            * Jedna notatka maj¹ca wszystkie te tagi i ani jednego taga wiêcej
+            */
+
+            string[] separators = { " " };
+            List<string> tags = searchText.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            /*
+            * Poni¿sze rozwi¹zanie jest skrajnie chujowe i wymaga poprawki, ale nic innego nie dzia³a³o. Trzeba poczekaæ na lepsz¹ edycjê EF7
+            * Tak to powinno w teorii wygl¹daæ:
+            * var allNotes = db.Notes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag))).Include(x => x.NoteTags).ThenInclude(x => x.Tag);
+            * Niestety “Sequence contains more than one element” cokolwiek to kurwa znaczy
+            */
+
+        
+            var allNotes = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).Where(x => x.NoteTags.Count == tags.Count).ToList();
+            List<Note> finalNotes = new List<Note>();
+            foreach (var note in allNotes)
+            {
+                //if(allNotes.)
+                bool allOfThem = true; //note has all of given tags
+                foreach (var tag in tags)
+                {
+                    bool tagExists = false; //tag is in note
+                    foreach (var notetag in note.NoteTags)
+                    {
+                        if (notetag.Tag.Name == tag)
+                        {
+                            tagExists = true;
+                            break;
+                        }
+                    }
+                    if (tagExists == false)
+                    {
+                        allOfThem = false;
+                        break;
+                    }
+                }
+                if (allOfThem == true)
+                {
+                    finalNotes.Add(note);
+                }
+            }
+
+            if(finalNotes.Count > 1)
+            {
+                return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
+            }
+
+            var finalResult = finalNotes.FirstOrDefault();
+
+            return Ok(JsonConvert.SerializeObject(finalResult, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
+
         // GET: api/Notes/5
         [HttpGet("{id}", Name = "GetNote")]
         public IActionResult GetNote([FromRoute] int id)

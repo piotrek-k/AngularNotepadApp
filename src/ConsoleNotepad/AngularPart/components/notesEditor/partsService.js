@@ -30,7 +30,7 @@
         //console.table(part);
         return $http({
             method: 'PUT',
-            url: '/api/Parts/'+part.ID,
+            url: '/api/Parts/' + part.ID,
             data: part,
             headers: {
                 'Accept': 'application/json'

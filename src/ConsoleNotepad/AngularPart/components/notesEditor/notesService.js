@@ -23,6 +23,16 @@
         });
     }
 
+    notes.getByTag = function (searchText) {
+        return $http({
+            method: 'GET',
+            url: '/api/notes/bytags?searchText=' + searchText,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+    }
+
     notes.post = function (data) {
         //TODO
         //return $http({
