@@ -44,3 +44,7 @@ textarea {
 .notePart {
     border: solid 1px black;
 }
+
+.notePartEditable {
+    padding: 1rem;
+}

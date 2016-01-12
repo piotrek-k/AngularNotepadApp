@@ -5,15 +5,13 @@
 }
 
 <div ng-controller="editorController">
-    <input id="smartBar" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" />
+    <input id="smartBar" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" focus-on="smartBar"/>
     <!--<code>{{smartBar}}</code>-->
     <!--<code>{{suggestions}}</code>-->
-    <table>
+    <table ng-if="showSuggestions">
         <tr ng-repeat="sg in suggestions" ng-class="{yellow: $index == highlightedSuggestion}">
             <td>*</td>
-            <td ng-repeat="nt in sg.NoteTags">
-                
-                {{$index}}
+            <td ng-repeat="nt in sg.NoteTags" style="padding: 0rem 1rem">
                 {{nt.Tag.Name}}
             </td>
         </tr>
@@ -23,7 +21,7 @@
             <div ng-if="p.localState=='OK'">OK</div>
             <div ng-if="p.localState=='Sending'">Sending...</div>
             <div ng-if="p.localState=='Problem'">Couldn't send...</div>
-            <div ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="part{{$index}}">{{p.Data}}</div>
+            <div class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="part{{$index}}">{{p.Data}}</div>
             @*{{p.Data}}*@
         </div>
         @*<div class="notePart">
@@ -31,9 +29,9 @@
             <div ng-model="nextPart.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event)">test</div>
         </div>*@
     </div>
-    <code>highlightedSuggestion {{highlightedSuggestion}}</code>
+    @*<code>highlightedSuggestion {{highlightedSuggestion}}</code>
     <code>sugg length {{suggestions.length}}</code>
     <code>{{highlightedSuggestion < suggestions.length}}</code>
     <code>noteId {{currentNoteId}}</code>
-    <code>{{parts}}</code>
+    <code>{{parts}}</code>*@
 </div>

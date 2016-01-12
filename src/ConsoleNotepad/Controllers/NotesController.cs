@@ -74,6 +74,8 @@ namespace ConsoleNotepad.Controllers
                 }
             }
 
+            finalNotes = finalNotes.OrderBy(x => x.NoteTags.Count).ToList();
+
             return Ok(JsonConvert.SerializeObject(finalNotes, Formatting.Indented, new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore

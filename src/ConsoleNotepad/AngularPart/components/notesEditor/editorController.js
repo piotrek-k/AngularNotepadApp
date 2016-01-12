@@ -1,5 +1,6 @@
 ﻿app.controller('editorController', function ($scope, notes, parts, focusOn) {
     $scope.suggestions = {};
+    $scope.showSuggestions = false;
     $scope.highlightedSuggestion = -1;
     $scope.currentNoteId = 0;
     $scope.parts = [
@@ -10,6 +11,8 @@
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
     $scope.focusOnPart = 0;
+
+    focusOn("smartBar");
 
     $scope.smartBarKeyDown = function (event) {
         //console.log("Refresh " + event.keyCode)
@@ -48,10 +51,7 @@
                 $scope.currentNoteId = note.NoteId;
 
                 $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                    $scope.parts = data;
-                    console.log("Got data: ");
-                    console.table(data);
-                    partsCheckForNull();
+                    whenPartsReceived(data);
                 });
             }
             else {
@@ -61,12 +61,9 @@
                     $scope.currentNoteId = noteData.NoteId;
 
                     $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                        $scope.parts = data;
-                        console.log("Got data: ");
-                        console.table(data);
-                        partsCheckForNull();
+                        whenPartsReceived(data);
                     });
-                });        
+                });
             }
 
         }
@@ -112,7 +109,7 @@
             atIndex = 0;
         }
 
-        $scope.parts.splice(atIndex, 0, { Data: "new", NoteID: $scope.currentNoteId }); //add at index
+        $scope.parts.splice(atIndex, 0, { Data: "&nbsp;", NoteID: $scope.currentNoteId }); //add at index
 
         focusOn("part" + atIndex); //przenieś kursor do nowego parta
 
@@ -130,5 +127,14 @@
         if ($scope.parts.length == 0 || $scope.parts == null) {
             addPart();
         }
+    }
+
+    function whenPartsReceived(data) {
+        $scope.parts = data;
+        console.log("Got data: ");
+        console.table(data);
+        partsCheckForNull();
+
+        focusOn("part" + ($scope.parts.length - 1)); //skocz do ostatniego utworzonego parta
     }
 });
