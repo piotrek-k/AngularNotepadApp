@@ -90,6 +90,11 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
+            if(part.ID == -1)
+            {
+                return new HttpStatusCodeResult(StatusCodes.Status404NotFound);
+            }
+
             _context.Parts.Add(part);
             try
             {

@@ -21,10 +21,10 @@ namespace ConsoleNotepad.Models
         public DateTime? CreationDate { get; set; }
 
         [NotMapped]
-        public string TagsToAdd { get; set; }
+        public string TagsToAdd { get; set; } //podawanew metodzie POST żeby uzupełnić tagi
 
         [NotMapped]
-        public string TagsAsSingleString
+        public string TagsAsSingleString //zwraca wszystkie tagi jako jeden string
         {
             get
             {

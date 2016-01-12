@@ -26,12 +26,11 @@
             event.preventDefault();
             $scope.highlightedSuggestion++;
         }
-        if (event.keyCode == 38 && $scope.highlightedSuggestion > -1) { //arrow up
+        else if (event.keyCode == 38 && $scope.highlightedSuggestion > -1) { //arrow up
             event.preventDefault();
             $scope.highlightedSuggestion--;
         }
-
-        if (event.keyCode == 13) { //enter // && $scope.highlightedSuggestion > -1
+        else if (event.keyCode == 13) { //enter // && $scope.highlightedSuggestion > -1
             //uzupełnij inputa, zacznij pisanie notatki
             //console.table($scope.suggestions[$scope.highlightedSuggestion].NoteTags);
 
@@ -70,6 +69,10 @@
                 });        
             }
 
+        }
+
+        if (event.keyCode != 13 && event.keyCode != 40 && event.keyCode != 38) {
+            $scope.highlightedSuggestion = -1; //zmieniła się treść, wyzeruj listę z podpowiedziami
         }
     }
 

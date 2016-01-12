@@ -6,6 +6,7 @@ using Microsoft.Data.Entity;
 using ConsoleNotepad.Models;
 using System;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace ConsoleNotepad.Controllers
 {
@@ -133,6 +134,17 @@ namespace ConsoleNotepad.Controllers
 
             var finalResult = finalNotes.FirstOrDefault();
 
+            if(finalResult == null)
+            {
+                //brak takiej notatki w bazie. utworz j¹
+                int idOfNewNote = PostNote(new Note
+                {
+                    TagsToAdd = searchText
+                });
+
+                finalResult = db.Notes.First(x => x.NoteId == idOfNewNote);
+            }
+
             return Ok(JsonConvert.SerializeObject(finalResult, Formatting.Indented, new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -217,13 +229,42 @@ namespace ConsoleNotepad.Controllers
 
         // POST: api/Notes
         [HttpPost]
-        public IActionResult PostNote([FromBody] Note note)
+        public int PostNote([FromBody] Note note)
         {
+            //wymagane: TagsToAdd (doda NoteTags)
+
             if (!ModelState.IsValid)
             {
-                return HttpBadRequest(ModelState);
+                //return HttpBadRequest(ModelState);
+                return -1;
             }
 
+            note = TagsToAddToTags(note);
+
+            db.Notes.Add(note);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                if (NoteExists(note.NoteId))
+                {
+                    //return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
+                    return -1;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            //return CreatedAtRoute("GetNote", new { id = note.NoteId }, note);
+            return note.NoteId;
+        }
+
+        public Note TagsToAddToTags(Note note)
+        {
             string[] separators = { " " };
             List<string> tags = note.TagsToAdd.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
             foreach (var t in tags)
@@ -238,24 +279,7 @@ namespace ConsoleNotepad.Controllers
                 note.NoteTags.Add(new NoteTag { Tag = tagInDb });
             }
 
-            db.Notes.Add(note);
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (NoteExists(note.NoteId))
-                {
-                    return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("GetNote", new { id = note.NoteId }, note);
+            return note;
         }
 
         // DELETE: api/Notes/5
