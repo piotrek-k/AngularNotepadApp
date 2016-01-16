@@ -88,6 +88,10 @@ namespace ConsoleNotepad.Controllers
             /*
             * Jedna notatka maj¹ca wszystkie te tagi i ani jednego taga wiêcej
             */
+            if(searchText == null)
+            {
+                searchText = "";
+            }
 
             string[] separators = { " " };
             List<string> tags = searchText.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();

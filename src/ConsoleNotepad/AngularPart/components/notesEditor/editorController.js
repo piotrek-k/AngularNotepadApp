@@ -12,6 +12,7 @@
     var editingPartOptions = {};
     $scope.focusOnPart = 0;
 
+    getPartsByTag();
     focusOn("smartBar");
 
     $scope.smartBarKeyDown = function (event) {
@@ -38,32 +39,11 @@
             //console.table($scope.suggestions[$scope.highlightedSuggestion].NoteTags);
 
             if ($scope.highlightedSuggestion != -1) {
-                $scope.smartBar = "";
-
-                var note = $scope.suggestions[$scope.highlightedSuggestion];
-                console.table(note);
-
-                //uzupelniam smartBar o wybrane tagi
-                for (var nt in note.NoteTags) {
-                    $scope.smartBar += note.NoteTags[nt].Tag.Name + " ";
-                }
-
-                $scope.currentNoteId = note.NoteId;
-
-                $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                    whenPartsReceived(data);
-                });
+                oneOfSuggestionsChosen($scope.highlightedSuggestion);
             }
             else {
                 //nie wybrano nic z listy, trzeba więc zdobyć ID wpisanej notatki
-                var note = notes.getByTag($scope.smartBar).success(function (noteData) {
-                    console.table(noteData);
-                    $scope.currentNoteId = noteData.NoteId;
-
-                    $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                        whenPartsReceived(data);
-                    });
-                });
+                getPartsByTag();
             }
 
         }
@@ -90,6 +70,38 @@
 
     }
 
+    function getPartsByTag() {
+        if ($scope.smartBar == undefined) {
+            $scope.smartBar = "";
+        }
+        notes.getByTag($scope.smartBar).success(function (noteData) {
+            //console.table(noteData);
+            $scope.currentNoteId = noteData.NoteId;
+
+            $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+                whenPartsReceived(data);
+            });
+        });
+    }
+
+    function oneOfSuggestionsChosen(i) {
+        $scope.smartBar = "";
+
+        var note = $scope.suggestions[i];
+        console.table(note);
+
+        //uzupelniam smartBar o wybrane tagi
+        for (var nt in note.NoteTags) {
+            $scope.smartBar += note.NoteTags[nt].Tag.Name + " ";
+        }
+
+        $scope.currentNoteId = note.NoteId;
+
+        $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+            whenPartsReceived(data);
+        });
+    }
+
     function updatePart(index) {
 
         $scope.parts[index].localState = "Sending";
@@ -111,7 +123,9 @@
 
         $scope.parts.splice(atIndex, 0, { Data: "&nbsp;", NoteID: $scope.currentNoteId }); //add at index
 
-        focusOn("part" + atIndex); //przenieś kursor do nowego parta
+        console.log("------focusOn")
+        //focusOn("part" + atIndex + "_window" + $scope.$index); //przenieś kursor do nowego parta
+        document.getElementById("part" + atIndex + "_window" + $scope.$index).focus();
 
         $scope.parts[atIndex].localState = "Sending";
 
@@ -131,10 +145,24 @@
 
     function whenPartsReceived(data) {
         $scope.parts = data;
-        console.log("Got data: ");
-        console.table(data);
+        //console.log("Got data: ");
+        //console.table(data);
         partsCheckForNull();
 
-        focusOn("part" + ($scope.parts.length - 1)); //skocz do ostatniego utworzonego parta
+        var a = "part" + ($scope.parts.length - 1) + "window" + ($scope.$index);
+        console.log("---------"+a);
+        //focusOn("part" + ($scope.parts.length - 1) + "_window" + $scope.$index); //skocz do ostatniego utworzonego parta
+        var el = document.getElementById(a);
+        console.log(el);
+        if (el != null) {
+            el.focus();
+        }
+    }
+
+    $scope.suggestionClicked = function (i, evt) {
+        console.log("CLICKED");
+        if (evt.which === 1) {
+            oneOfSuggestionsChosen(i);
+        }
     }
 });

@@ -1,6 +1,12 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #331100;
+    color: white;
+}
+
+.container {
+    width: 100% !important;
 }
 
 /* Wrapping element */
@@ -8,6 +14,28 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.notePadWindow {
+    display: inline-block;
+    margin: 1rem;
+    word-wrap: break-word;
+    padding: 0rem 1rem;
+    position: relative;
+}
+
+div.table {display: table; width: 100%; table-layout:fixed;}
+div.tr { display: table-row; }
+div.td { display: table-cell; width: 100px; }
+
+.windowBorderRight {
+    border-right: 2px solid black;
+}
+
+.windowOptions {
+    position: absolute;
+    right: 0px;
+    top: 0px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -37,14 +65,51 @@ textarea {
     W notepadzie
 */
 
-.yellow {
-    background-color: yellow;
+.highlighedSuggestion {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .notePart {
-    border: solid 1px black;
+    /*border: solid 1px black;*/
+    position: relative;
 }
 
 .notePartEditable {
+    outline: none;
+}
+
+.notePartEditableWithDecorations {
     padding: 1rem;
+}
+
+.partDecoration {
+    position: absolute;
+    left: -1rem;
+}
+
+.partDecorationRight {
+    position: absolute;
+    right: 0;
+}
+
+.wrapper { /*obiekt w ktorym jest imput z rozwijana listą*/
+    position: relative;
+    margin: 1rem 0rem;
+}
+
+    .wrapper .suggestionList {
+        position: absolute;
+        background-color:  #331100;
+        box-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
+        z-index: 2;
+        /*bottom: 0;*/
+    }
+
+#smartBar {
+    width: 100%;
+    color: black;
+    background-color: rgba(255,255,255, 0.1);
+    border: none;
+    outline: none;
+    z-index: 3;
 }

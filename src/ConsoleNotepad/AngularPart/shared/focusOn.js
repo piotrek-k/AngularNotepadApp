@@ -1,8 +1,12 @@
 ﻿app.directive('focusOn', function () {
     return function (scope, elem, attr) {
+        //console.table(scope);
         scope.$on('focusOn', function (e, name) {
+            //console.log("name: " + name + " attr.focusOn: " + attr.focusOn);
             if (name === attr.focusOn) {
                 elem[0].focus();
+                //console.log("true");
+                //console.table(elem[0]);
             }
 
             if (typeof window.getSelection != "undefined"
