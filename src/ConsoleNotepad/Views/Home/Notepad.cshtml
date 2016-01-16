@@ -27,7 +27,7 @@
                             <div ng-if="p.localState=='Sending'"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></div>
                             <div ng-if="p.localState=='Problem'"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
                         </div>
-                        <div class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" id="part{{$index}}window{{$parent.$index}}">{{p.Data}}</div>
+                        <div class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}">{{p.Data}}</div> @*part{{$index}}window{{$parent.$index}}*@
                     </div>
                 </div>
             </div>

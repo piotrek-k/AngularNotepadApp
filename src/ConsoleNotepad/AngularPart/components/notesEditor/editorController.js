@@ -149,14 +149,7 @@
         //console.table(data);
         partsCheckForNull();
 
-        var a = "part" + ($scope.parts.length - 1) + "window" + ($scope.$index);
-        console.log("---------"+a);
-        //focusOn("part" + ($scope.parts.length - 1) + "_window" + $scope.$index); //skocz do ostatniego utworzonego parta
-        var el = document.getElementById(a);
-        console.log(el);
-        if (el != null) {
-            el.focus();
-        }
+        focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
 
     $scope.suggestionClicked = function (i, evt) {
