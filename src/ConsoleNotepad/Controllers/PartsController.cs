@@ -67,7 +67,7 @@ namespace ConsoleNotepad.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return HttpBadRequest(ModelState);
+                    return HttpBadRequest(ModelState);
             }
 
             if (id != part.ID)

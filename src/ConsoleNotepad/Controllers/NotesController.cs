@@ -54,15 +54,15 @@ namespace ConsoleNotepad.Controllers
                 foreach (var tag in tags)
                 {
                     bool tagExists = false; //tag is in note
-                    foreach(var notetag in note.NoteTags)
+                    foreach (var notetag in note.NoteTags)
                     {
-                        if(notetag.Tag.Name == tag)
+                        if (notetag.Tag.Name == tag)
                         {
                             tagExists = true;
                             break;
                         }
                     }
-                    if(tagExists == false)
+                    if (tagExists == false)
                     {
                         allOfThem = false;
                         break;
@@ -76,6 +76,17 @@ namespace ConsoleNotepad.Controllers
 
             finalNotes = finalNotes.OrderBy(x => x.NoteTags.Count).ToList();
 
+            //trzeba zwolniæ pamiêæ
+            foreach (var fn in finalNotes)
+            {
+                fn.Parts = null;
+                foreach (var t in fn.NoteTags)
+                {
+                    t.Note = null;
+                    t.Tag.NoteTags = null;
+                }
+            }
+
             return Ok(JsonConvert.SerializeObject(finalNotes, Formatting.Indented, new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -88,7 +99,7 @@ namespace ConsoleNotepad.Controllers
             /*
             * Jedna notatka maj¹ca wszystkie te tagi i ani jednego taga wiêcej
             */
-            if(searchText == null)
+            if (searchText == null)
             {
                 searchText = "";
             }
@@ -103,7 +114,7 @@ namespace ConsoleNotepad.Controllers
             * Niestety “Sequence contains more than one element” cokolwiek to kurwa znaczy
             */
 
-        
+
             var allNotes = db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).Where(x => x.NoteTags.Count == tags.Count).ToList();
             List<Note> finalNotes = new List<Note>();
             foreach (var note in allNotes)
@@ -133,20 +144,30 @@ namespace ConsoleNotepad.Controllers
                 }
             }
 
-            if(finalNotes.Count > 1)
+            if (finalNotes.Count > 1)
             {
                 return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
             }
 
             var finalResult = finalNotes.FirstOrDefault();
 
-            if(finalResult == null)
+            if (finalResult == null)
             {
                 //brak takiej notatki w bazie. utworz j¹
                 int idOfNewNote = PostNote(new Note
                 {
                     TagsToAdd = searchText
                 });
+
+                //jesli nie ma zadnych partow, dodaj
+                if (db.Notes.First(x => x.NoteId == idOfNewNote).NoteTags.Count() == 0)
+                {
+                    db.Parts.Add(new Part
+                    {
+                        Data = "Nowa notatka",
+                        NoteID = idOfNewNote
+                    });
+                }
 
                 finalResult = db.Notes.First(x => x.NoteId == idOfNewNote);
             }
@@ -248,8 +269,19 @@ namespace ConsoleNotepad.Controllers
             note = TagsToAddToTags(note);
 
             db.Notes.Add(note);
+
+
+
             try
             {
+                db.SaveChanges();
+
+                db.Parts.Add(new Part
+                {
+                    Data = "Nowa notatka",
+                    NoteID = note.NoteId
+                });
+
                 db.SaveChanges();
             }
             catch (DbUpdateException)
