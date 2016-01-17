@@ -123,9 +123,7 @@
 
         $scope.parts.splice(atIndex, 0, { Data: "&nbsp;", NoteID: $scope.currentNoteId }); //add at index
 
-        console.log("------focusOn")
-        //focusOn("part" + atIndex + "_window" + $scope.$index); //przenieś kursor do nowego parta
-        document.getElementById("part" + atIndex + "_window" + $scope.$index).focus();
+        focusOn("part" + atIndex + "window" + $scope.$index); //przenieś kursor do nowego parta
 
         $scope.parts[atIndex].localState = "Sending";
 
@@ -148,12 +146,10 @@
         //console.log("Got data: ");
         //console.table(data);
         partsCheckForNull();
-
         focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
 
     $scope.suggestionClicked = function (i, evt) {
-        console.log("CLICKED");
         if (evt.which === 1) {
             oneOfSuggestionsChosen(i);
         }
