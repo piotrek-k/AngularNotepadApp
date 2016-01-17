@@ -11,6 +11,7 @@
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
     $scope.focusOnPart = 0;
+    $scope.activePart = 0;
 
     getPartsByTag();
     focusOn("smartBar");
@@ -60,14 +61,6 @@
         timeoutUpdate = setTimeout(function () { updatePart(partObjIndex) }, 1000);
         $scope.parts[partObjIndex].localState = "Sending";
 
-        //2x enter dodaje nowy part
-        var partObj = $scope.parts[partObjIndex];
-        if (event.keyCode == 13 && /\s*<br>\s*<br>\s*$/.test(partObj.Data)) { //enter
-            $scope.parts[partObjIndex].Data = $scope.parts[partObjIndex].Data.replace(/\s*<br>\s*$/g, "");
-            addPart(partObjIndex);
-            event.preventDefault(); //żeby nie dawało już tego entera
-        }
-
     }
 
     function getPartsByTag() {
@@ -114,12 +107,9 @@
 
     }
 
-    function addPart(lastIndex) {
-
-        var atIndex = lastIndex + 1;
-        if (lastIndex == null) {
-            atIndex = 0;
-        }
+    $scope.addPart = function () {
+        var atIndex = $scope.activePart+1;
+        //console.log("atIndex: " + atIndex);
 
         $scope.parts.splice(atIndex, 0, { Data: "&nbsp;", NoteID: $scope.currentNoteId }); //add at index
 
@@ -137,7 +127,7 @@
 
     function partsCheckForNull() {
         if ($scope.parts.length == 0 || $scope.parts == null) {
-            addPart();
+            $scope.addPart();
         }
     }
 
@@ -153,5 +143,9 @@
         if (evt.which === 1) {
             oneOfSuggestionsChosen(i);
         }
+    }
+
+    $scope.focusedOnPart = function (i) {
+        $scope.activePart = i;
     }
 });

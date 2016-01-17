@@ -6,7 +6,7 @@
 
 <div ng-controller="windowsController" class="table">
     <div class="tr">
-        <div class="notePadWindow td" ng-class="{windowBorderRight: $index < arr.length-1}" ng-controller="editorController"  ng-repeat="x in numberOfWindows">
+        <div ng-controller="editorController" class="notePadWindow td" ng-class="{windowBorderRight: $index < arr.length-1}"   ng-repeat="x in numberOfWindows">
             <div class="wrapper">
                 <input id="smartBar" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" focus-on="smartBar" />
                 <table class="suggestionList" ng-show="showSuggestions">
@@ -27,10 +27,12 @@
                             <div ng-if="p.localState=='Sending'"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></div>
                             <div ng-if="p.localState=='Problem'"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
                         </div>
-                        <div class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}">{{p.Data}}</div>
+                        <div class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
                     </div>
                 </div>
             </div>
+
+            <button class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
 
             <div class="windowOptions">
                 <span class="glyphicon glyphicon-plus" ng-click="addWindow($index)"></span>
