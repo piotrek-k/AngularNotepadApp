@@ -108,7 +108,7 @@
     }
 
     $scope.addPart = function () {
-        var atIndex = $scope.activePart+1;
+        var atIndex = $scope.activePart + 1;
         //console.log("atIndex: " + atIndex);
 
         $scope.parts.splice(atIndex, 0, { Data: "&nbsp;", NoteID: $scope.currentNoteId }); //add at index
@@ -116,6 +116,14 @@
         focusOn("part" + atIndex + "window" + $scope.$index); //przenieś kursor do nowego parta
 
         $scope.parts[atIndex].localState = "Sending";
+        $scope.parts[atIndex].OrderPosition = $scope.parts[atIndex - 1].OrderPosition + 1;
+
+        //to samo dzieje sie na serwerze
+        for (var a in $scope.parts) {
+            if (a != atIndex && $scope.parts[a].OrderPosition >= $scope.parts[atIndex].OrderPosition) {
+                $scope.parts[a].OrderPosition++;
+            }
+        }
 
         parts.post($scope.parts[atIndex]).success(function (data) {
             $scope.parts[atIndex].ID = data.ID;

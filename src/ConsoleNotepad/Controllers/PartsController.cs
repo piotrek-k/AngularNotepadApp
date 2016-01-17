@@ -23,7 +23,22 @@ namespace ConsoleNotepad.Controllers
         [HttpGet]
         public IActionResult GetParts(int idOfNote)
         {
-            var data = _context.Parts.Where(x => x.NoteID == idOfNote).ToList();
+            //usun puste party
+            var a = _context.Parts.Where(x => x.NoteID == idOfNote && (String.IsNullOrWhiteSpace(x.Data) || x.Data == "&nbsp;"));
+            var count = a.Count();
+            if (a.Count() < 100)
+            {
+                _context.Parts.RemoveRange(a);
+                _context.SaveChanges();
+            }
+            else
+            {
+                //niebezpiecznie duzo partsow do usuniecia
+                return Json(new { Error = "Zbyt duzo obiektów typu Part do usuniêcia. " + a.Count() });
+            }
+            
+
+            var data = _context.Parts.Where(x => x.NoteID == idOfNote).OrderBy(x => x.OrderPosition).ToList();
             return Ok(data);
         }
 
@@ -96,6 +111,11 @@ namespace ConsoleNotepad.Controllers
             }
 
             _context.Parts.Add(part);
+
+            //change order
+            var partsThatAreLaterInList = _context.Parts.Where(x => x.NoteID == part.NoteID && x.OrderPosition >= part.OrderPosition).ToList();
+            partsThatAreLaterInList.ForEach(x => x.OrderPosition++);
+
             try
             {
                 _context.SaveChanges();

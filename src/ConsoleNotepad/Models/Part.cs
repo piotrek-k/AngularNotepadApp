@@ -18,6 +18,8 @@ namespace ConsoleNotepad.Models
         public string Data { get; set; }
         public DateTime? CreationDate { get; set; }
 
+        public int OrderPosition { get; set; }
+
         [ForeignKey("Note")]
         public int NoteID { get; set; }
         public virtual Note Note { get; set; }
