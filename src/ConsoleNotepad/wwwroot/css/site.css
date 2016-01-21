@@ -24,9 +24,27 @@
     position: relative;
 }
 
-div.table {display: table; width: 100%; table-layout:fixed;}
-div.tr { display: table-row; }
-div.td { display: table-cell; width: 100px; }
+div.table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+div.tr {
+    display: table-row;
+}
+
+div.td {
+    display: table-cell;
+    width: 100px;
+}
+
+/*ACE code editor*/
+.codeEditor {
+    width: 100%;
+    height: 80vh;
+}
+
 
 .windowBorderRight {
     border-right: 2px solid black;
@@ -99,7 +117,7 @@ textarea {
 
     .wrapper .suggestionList {
         position: absolute;
-        background-color:  #331100;
+        background-color: #331100;
         box-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
         z-index: 2;
         /*bottom: 0;*/

@@ -1,4 +1,6 @@
-﻿app.controller('editorController', function ($scope, notes, parts, focusOn) {
+﻿app.controller('editorController', function ($scope, notes, parts, focusOn, $element) {
+    $scope.windowId = 0;
+
     $scope.suggestions = {};
     $scope.showSuggestions = false;
     $scope.highlightedSuggestion = -1;
@@ -12,9 +14,18 @@
     var editingPartOptions = {};
     $scope.focusOnPart = 0;
     $scope.activePart = 0;
+    $scope.theOnlyPartData = "jakies costam"; //dla kodu
+
+    $scope.onePartNote = false; //notatki z kodem mogą mieć tylko jeden part
+    $scope.noteType = "";
 
     getPartsByTag();
     focusOn("smartBar");
+
+    $scope.setWindowID = function (index) {
+        console.log("windowID: " + index)
+        $scope.windowId = index;
+    }
 
     $scope.smartBarKeyDown = function (event) {
         //console.log("Refresh " + event.keyCode)
@@ -70,6 +81,7 @@
         notes.getByTag($scope.smartBar).success(function (noteData) {
             //console.table(noteData);
             $scope.currentNoteId = noteData.NoteId;
+            checkForSpecialTags($scope.smartBar);
 
             $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
                 whenPartsReceived(data);
@@ -89,6 +101,7 @@
         }
 
         $scope.currentNoteId = note.NoteId;
+        checkForSpecialTags($scope.smartBar);
 
         $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
             whenPartsReceived(data);
@@ -156,4 +169,45 @@
     $scope.focusedOnPart = function (i) {
         $scope.activePart = i;
     }
+
+    function checkForSpecialTags(tagsAsString) {
+        //może istnieć tylko jeden tag specjalny na notatke
+        var a = tagsAsString.split(" ");
+        var specialTagType = "";
+
+        for (var x in a) {
+            if (a[x].charAt(0) == "!") { //to jest tag specjalny
+                specialTagType = a[x].substring(1); //utnij pierwszy znak
+                break;
+            }
+        }
+
+        if (specialTagType == "code" || specialTagType == "c") {
+            $scope.noteType = "code";
+            $scope.onePartNote = true;
+        }
+        else if (specialTagType == "view" || specialTagType == "v") {
+            $scope.noteType = "view";
+            $scope.onePartNote = true;
+        }
+        else {
+            $scope.noteType = "text";
+            $scope.onePartNote = false;
+        }
+    }
+
+    //$scope.setupCodeEditor = function (language) {
+    //    console.log(language);
+    //    var codeEditor = $element.find("#codeEditor")[0];
+    //    if (codeEditor) {
+    //        $scope.editor = ace.edit(codeEditor); //$element.find("#codeEditor")
+    //        $scope.editor.setTheme("ace/theme/monokai");
+    //        if (language == "code") {
+    //            $scope.editor.getSession().setMode("ace/mode/javascript");
+    //        }
+    //        else {
+    //            $scope.editor.getSession().setMode("ace/mode/html");
+    //        }
+    //    }
+    //}
 });
