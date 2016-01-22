@@ -12,14 +12,14 @@
     ];
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
-    $scope.focusOnPart = 0;
+    //$scope.focusOnPart = 0;
     $scope.activePart = 0;
-    $scope.theOnlyPartData = "jakies costam"; //dla kodu
+    //$scope.theOnlyPartData = "jakies costam"; //dla kodu
 
-    $scope.onePartNote = false; //notatki z kodem mogą mieć tylko jeden part
-    $scope.noteType = "";
+    $scope.onePartNote = false; //notatki z kodem mogą mieć tylko jeden part, chowa przycisk
+    $scope.noteType = ""; //typ notatki, dostosowuje edytor
 
-    getPartsByTag();
+    getPartsByTag(); //ładuje notatkę która nie ma tagów (strona startowa)
     focusOn("smartBar");
 
     $scope.setWindowID = function (index) {
@@ -74,6 +74,18 @@
 
     }
 
+    function updatePart(index) {
+
+        $scope.parts[index].localState = "Sending";
+
+        parts.put($scope.parts[index]).success(function () {
+            $scope.parts[index].localState = "OK";
+        }).error(function () {
+            $scope.parts[index].localState = "Problem";
+        });
+
+    }
+
     function getPartsByTag() {
         if ($scope.smartBar == undefined) {
             $scope.smartBar = "";
@@ -89,7 +101,7 @@
         });
     }
 
-    function oneOfSuggestionsChosen(i) {
+    function oneOfSuggestionsChosen(i) { //wybrano opcję z listy
         $scope.smartBar = "";
 
         var note = $scope.suggestions[i];
@@ -108,17 +120,7 @@
         });
     }
 
-    function updatePart(index) {
-
-        $scope.parts[index].localState = "Sending";
-
-        parts.put($scope.parts[index]).success(function () {
-            $scope.parts[index].localState = "OK";
-        }).error(function () {
-            $scope.parts[index].localState = "Problem";
-        });
-
-    }
+   
 
     $scope.addPart = function () {
         var atIndex = $scope.activePart + 1;
@@ -154,8 +156,8 @@
 
     function whenPartsReceived(data) {
         $scope.parts = data;
-        //console.log("Got data: ");
-        //console.table(data);
+        console.log("Got data: ");
+        console.table(data);
         partsCheckForNull();
         focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
@@ -166,7 +168,7 @@
         }
     }
 
-    $scope.focusedOnPart = function (i) {
+    $scope.focusedOnPart = function (i) { //gdy on-focus na jednym z part'ów
         $scope.activePart = i;
     }
 
@@ -183,11 +185,11 @@
         }
 
         if (specialTagType == "code" || specialTagType == "c") {
-            $scope.noteType = "code";
+            $scope.noteType = "javascript";
             $scope.onePartNote = true;
         }
         else if (specialTagType == "view" || specialTagType == "v") {
-            $scope.noteType = "view";
+            $scope.noteType = "html";
             $scope.onePartNote = true;
         }
         else {
@@ -195,19 +197,4 @@
             $scope.onePartNote = false;
         }
     }
-
-    //$scope.setupCodeEditor = function (language) {
-    //    console.log(language);
-    //    var codeEditor = $element.find("#codeEditor")[0];
-    //    if (codeEditor) {
-    //        $scope.editor = ace.edit(codeEditor); //$element.find("#codeEditor")
-    //        $scope.editor.setTheme("ace/theme/monokai");
-    //        if (language == "code") {
-    //            $scope.editor.getSession().setMode("ace/mode/javascript");
-    //        }
-    //        else {
-    //            $scope.editor.getSession().setMode("ace/mode/html");
-    //        }
-    //    }
-    //}
 });

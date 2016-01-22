@@ -29,10 +29,9 @@
                         </div>
                         @*{{p.ID}}*@
                         <div ng-if="noteType=='text'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
+                        <div ng-if="noteType=='javascript'||noteType=='html'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                     </div>
                 </div>
-                @*<div id="codeEditor"  ng-init="setupCodeEditor(noteType)" focus-on="{{'part0window' + windowId}}" ng-model="theOnlyPartData"></div>*@
-                <div class="codeEditor" data-ace="javascript" ng-model="theOnlyPartData" ng-if="noteType=='code'||noteType=='view'"></div>
             </div>
 
             <button ng-if="!onePartNote" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>

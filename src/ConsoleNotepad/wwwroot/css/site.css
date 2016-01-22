@@ -108,6 +108,7 @@ textarea {
 .partDecorationRight {
     position: absolute;
     right: 0;
+    z-index: 1;
 }
 
 .wrapper { /*obiekt w ktorym jest imput z rozwijana listą*/
