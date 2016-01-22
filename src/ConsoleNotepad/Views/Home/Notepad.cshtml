@@ -26,8 +26,20 @@
                             <div ng-if="p.localState=='OK'"><span class="glyphicon glyphicon-ok" aria-hidden="true" /></div>
                             <div ng-if="p.localState=='Sending'"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></div>
                             <div ng-if="p.localState=='Problem'"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
+                            <div ng-if="$index == activePart"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true"></span></div>
                         </div>
                         @*{{p.ID}}*@
+                        <div ng-if="p.displayData.showSettings" class="settingsBox">
+                            <button ng-click="p.displayData.showSettings=false">Zamknij</button>
+                            <table>
+                                <tr ng-repeat="s in p.Settings"> <!-- ng-if="typeof s === 'string'"-->
+                                    <td>{{s[0]}}</td>
+                                    <td><input type="text" ng-model="s[1]" ng-keydown="editingPartKeyDown($event, $index)"/></td>
+                                </tr>
+                            </table>
+                            <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting"/><span class="glyphicon glyphicon-plus" ng-click="p.Settings.push([addSetting+'', ''])"></span></p>
+                            <p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>
+                        </div>
                         <div ng-if="noteType=='text'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
                         <div ng-if="noteType=='javascript'||noteType=='html'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                     </div>

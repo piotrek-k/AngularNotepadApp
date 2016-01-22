@@ -28,6 +28,12 @@
     parts.put = function (part) {
         //console.log("Updating...");
         //console.table(part);
+        if (part.Settings == undefined && part.SettingsAsJSON != undefined) {
+            console.warn("Ustawienia part'a zostały wyzerowane");
+        }
+        part.SettingsAsJSON = JSON.stringify(part.Settings);
+        console.log(part.SettingsAsJSON);
+
         return $http({
             method: 'PUT',
             url: '/api/Parts/' + part.ID,

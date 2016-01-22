@@ -5,8 +5,18 @@
     color: white;
 }
 
+input {
+    color: black;
+}
+
 .container {
     width: 100% !important;
+}
+
+.settingsBox {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 /* Wrapping element */
