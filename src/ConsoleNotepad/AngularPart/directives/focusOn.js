@@ -3,7 +3,7 @@
         scope.$on('focusOn', function (e, name) {
             if (name === attr.focusOn) {
                 $timeout(function () {
-
+                    
                     elem[0].focus();
 
                     if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
@@ -28,6 +28,7 @@
 app.factory('focusOn', function ($rootScope, $timeout) {
     return function (name) {
         $timeout(function () {
+            console.log("focusOn" + name);
             $rootScope.$broadcast('focusOn', name);
         });
     }

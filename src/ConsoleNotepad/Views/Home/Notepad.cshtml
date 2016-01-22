@@ -40,10 +40,13 @@
                             <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting"/><span class="glyphicon glyphicon-plus" ng-click="p.Settings[addSetting+'']=''"></span></p>
                             <p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>
                         </div>
-                        <view-loader ng-if="p.Settings['view'] != undefined" ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
+                        <div ng-if="p.Settings['view'] != undefined">
+                            <font size="1">{{p.Settings['view']}}</font><br />
+                            <view-loader ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
+                        </div>
                         <div ng-if="p.Settings['view'] == undefined">
-                            <div ng-if="noteType=='text'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
-                            <div ng-if="noteType=='javascript'||noteType=='html'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + $parent.$index}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
+                            <div ng-if="noteType=='text'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
+                            <div ng-if="noteType=='javascript'||noteType=='html'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                         </div>
                     </div>
                 </div>

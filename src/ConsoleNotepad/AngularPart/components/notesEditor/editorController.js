@@ -57,7 +57,7 @@
                 //nie wybrano nic z listy, trzeba więc zdobyć ID wpisanej notatki
                 getPartsByTag();
             }
-
+            angular.element("#smartBar").blur();
         }
 
         if (event.keyCode != 13 && event.keyCode != 40 && event.keyCode != 38) {

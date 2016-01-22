@@ -21,16 +21,16 @@
             }
 
             function reloadView(adress) {
-                console.log("adres: " + adress);
+                //console.log("adres: " + adress);
                 if (adress != undefined && adress != "") {
-                    console.log("loading note");
+                    //console.log("loading note");
                     notes.getByTag(adress).success(function (noteData) {
-                        console.log("noteloaded");
-                        console.table(noteData);
+                        //console.log("noteloaded");
+                        //console.table(noteData);
                         var currentNoteId = noteData.NoteId;
                         parts.get(currentNoteId).success(function (data) {
-                            console.log("part loaded");
-                            console.table(data);
+                            //console.log("part loaded");
+                            //console.table(data);
                             if (data.length == 1) {
                                 var html = data[0].Data;
                                 elem.html(html);
@@ -44,8 +44,8 @@
             }
 
             attrs.$observe('partSettings', function (newval) {
-                console.log("newval");
-                console.table(newval);
+                //console.log("newval");
+                //console.table(newval);
 
                 if (scope.oldSettings["view"] != newval["view"]) {
                     reloadView(newval["view"]);
