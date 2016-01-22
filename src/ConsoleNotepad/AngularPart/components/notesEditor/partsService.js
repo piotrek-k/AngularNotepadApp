@@ -32,7 +32,7 @@
             console.warn("Ustawienia part'a zostały wyzerowane");
         }
         part.SettingsAsJSON = JSON.stringify(part.Settings);
-        console.log(part.SettingsAsJSON);
+        //console.log(part.SettingsAsJSON);
 
         return $http({
             method: 'PUT',

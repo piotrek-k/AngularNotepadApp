@@ -169,6 +169,65 @@ app.factory('focusOn', function ($rootScope, $timeout) {
         });
     }
 });
+app.directive('viewLoader', function (notes, parts) {
+    return {
+        restrict: 'AE',
+        require: 'ngModel',
+        scope: {
+            ngModel: '=?',
+            settings: '=partSettings'
+        },
+        link: function (scope, elem, attrs, ngModel) {
+            //console.log("this");
+            //console.dir(this);
+            //console.table(attrs.partSettings);
+            //console.log("scopesettingd");
+            //console.table(scope.settings);
+            if (scope.settings != undefined) {
+                scope.oldSettings = scope.settings;
+
+                scope.viewAdress = scope.settings["view"] != undefined ? scope.settings["view"] : "";
+
+                reloadView(scope.viewAdress);
+            }
+
+            function reloadView(adress) {
+                console.log("adres: " + adress);
+                if (adress != undefined && adress != "") {
+                    console.log("loading note");
+                    notes.getByTag(adress).success(function (noteData) {
+                        console.log("noteloaded");
+                        console.table(noteData);
+                        var currentNoteId = noteData.NoteId;
+                        parts.get(currentNoteId).success(function (data) {
+                            console.log("part loaded");
+                            console.table(data);
+                            if (data.length == 1) {
+                                var html = data[0].Data;
+                                elem.html(html);
+                            }
+                            else {
+                                console.error("Nieprawidlowa ilosc partow: " + data.length);
+                            }
+                        });
+                    });
+                }
+            }
+
+            attrs.$observe('partSettings', function (newval) {
+                console.log("newval");
+                console.table(newval);
+
+                if (scope.oldSettings["view"] != newval["view"]) {
+                    reloadView(newval["view"]);
+                }
+                else {
+                    console.log("brak zmian");
+                }
+            });
+        }
+    };
+});
 app.controller('editorController', function ($scope, notes, parts, focusOn, $element) {
     $scope.windowId = 0;
 
@@ -329,22 +388,26 @@ app.controller('editorController', function ($scope, notes, parts, focusOn, $ele
         for (var p in data) {
 
             if (data[p].SettingsAsJSON == undefined) {
-                data[p].Settings = new Array();
+                data[p].Settings = {};
+                //data[p].Settings["test"] = "aaaaa";
             }
             else {
                 data[p].Settings = JSON.parse(data[p].SettingsAsJSON);
+                //data[p].Settings = {};
+                //data[p].Settings["test"] = "aaaaa";
+                //data[p].Settings["test22"] = "bb";
             }
             //data[p].Settings = new Array();
             //data[p].Settings.push(["view", "!view some tag"]);
             //data[p].Settings.push(["test", "!view some tag"]);
             //data[p].Settings[0] = "z cyferkom";
-            //console.table(data[p]);
+            //console.table(data[p].Settings);
         }
 
         $scope.parts = data;
 
-        console.log("Got data: ");
-        console.table(data);
+        //console.log("Got data: ");
+        //console.table(data);
         partsCheckForNull();
         focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
@@ -480,7 +543,7 @@ app.factory('parts', ['$http', function ($http) {
             console.warn("Ustawienia part'a zostały wyzerowane");
         }
         part.SettingsAsJSON = JSON.stringify(part.Settings);
-        console.log(part.SettingsAsJSON);
+        //console.log(part.SettingsAsJSON);
 
         return $http({
             method: 'PUT',

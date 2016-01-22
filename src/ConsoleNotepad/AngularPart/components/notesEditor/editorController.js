@@ -158,22 +158,26 @@
         for (var p in data) {
 
             if (data[p].SettingsAsJSON == undefined) {
-                data[p].Settings = new Array();
+                data[p].Settings = {};
+                //data[p].Settings["test"] = "aaaaa";
             }
             else {
                 data[p].Settings = JSON.parse(data[p].SettingsAsJSON);
+                //data[p].Settings = {};
+                //data[p].Settings["test"] = "aaaaa";
+                //data[p].Settings["test22"] = "bb";
             }
             //data[p].Settings = new Array();
             //data[p].Settings.push(["view", "!view some tag"]);
             //data[p].Settings.push(["test", "!view some tag"]);
             //data[p].Settings[0] = "z cyferkom";
-            //console.table(data[p]);
+            //console.table(data[p].Settings);
         }
 
         $scope.parts = data;
 
-        console.log("Got data: ");
-        console.table(data);
+        //console.log("Got data: ");
+        //console.table(data);
         partsCheckForNull();
         focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
