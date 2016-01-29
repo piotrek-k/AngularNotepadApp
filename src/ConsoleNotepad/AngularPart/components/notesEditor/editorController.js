@@ -115,7 +115,7 @@
         $scope.currentNoteId = note.NoteId;
         checkForSpecialTags($scope.smartBar);
 
-        $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+        parts.get($scope.currentNoteId).success(function (data) {
             whenPartsReceived(data);
         });
     }

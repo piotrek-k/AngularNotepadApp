@@ -6,6 +6,7 @@
 /// <reference path="../angularpart/components/noteseditor/partsservice.js" />
 /// <reference path="../angularpart/components/noteseditor/windowscontroller.js" />
 /// <reference path="../angularpart/directives/aceeditor.js" />
+/// <reference path="../angularpart/directives/appendscript.js" />
 /// <reference path="../angularpart/directives/contenteditable.js" />
 /// <reference path="../angularpart/directives/focuson.js" />
 /// <reference path="../angularpart/directives/viewloader.js" />
