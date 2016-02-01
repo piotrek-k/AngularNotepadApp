@@ -20,7 +20,7 @@
     $scope.noteType = ""; //typ notatki, dostosowuje edytor
 
     getPartsByTag(); //ładuje notatkę która nie ma tagów (strona startowa)
-    focusOn("smartBar");
+    focusOn("smartBar"+$scope.windowId);
 
     $scope.setWindowID = function (index) {
         console.log("windowID: " + index)
@@ -57,7 +57,7 @@
                 //nie wybrano nic z listy, trzeba więc zdobyć ID wpisanej notatki
                 getPartsByTag();
             }
-            angular.element("#smartBar").blur();
+            angular.element("#smartBar"+$scope.windowId).blur();
         }
 
         if (event.keyCode != 13 && event.keyCode != 40 && event.keyCode != 38) {
@@ -179,7 +179,7 @@
         //console.log("Got data: ");
         //console.table(data);
         partsCheckForNull();
-        focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
+        //focusOn("part" + ($scope.parts.length - 1) + "window" + $scope.$index); //skocz do ostatniego utworzonego parta
     }
 
     $scope.suggestionClicked = function (i, evt) {

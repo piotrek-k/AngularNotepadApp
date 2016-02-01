@@ -36,6 +36,11 @@ namespace ConsoleNotepad.Controllers
             * Dzia³a to tak: zwracane s¹ wszystkie notatki, które maj¹ przypisane wszystkie z podanych tagów
             */
 
+            if(searchText == null)
+            {
+                searchText = "";
+            }
+
             string[] separators = { " " };
             List<string> tags = searchText.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
 

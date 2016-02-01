@@ -4,11 +4,12 @@
 @{
 }
 
-<div ng-controller="windowsController" class="table">
+<div ng-controller="windowsController" class="table" keyboard-shortcuts-manager>
     <div class="tr">
         <div ng-controller="editorController" ng-init="setWindowID($index)" class="notePadWindow td" ng-class="{windowBorderRight: $index < arr.length-1}" ng-repeat="x in numberOfWindows">
+            <!--windowId zawiera index okna-->
             <div class="wrapper">
-                <input id="smartBar" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" focus-on="smartBar" />
+                <input id="smartBar{{windowId}}" class="smartBar" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" focus-on="smartBar{{windowId}}" />
                 <table class="suggestionList" ng-show="showSuggestions">
                     <tr ng-repeat="sg in suggestions" ng-class="{highlighedSuggestion: $index == highlightedSuggestion}" ng-mousedown="suggestionClicked($index, $event)">
                         <td ng-repeat="nt in sg.NoteTags" style="padding: 0rem 1rem">
