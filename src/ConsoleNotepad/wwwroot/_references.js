@@ -12,6 +12,7 @@
 /// <reference path="../angularpart/directives/keyboardshortcutsmanager.js" />
 /// <reference path="../angularpart/directives/viewloader.js" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="js/site.js" />
 /// <reference path="js/site.min.js" />
 /// <reference path="lib/angular/angular.js" />
 /// <reference path="lib/angular-route/angular-route.js" />

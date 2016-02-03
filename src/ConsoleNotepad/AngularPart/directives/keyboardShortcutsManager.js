@@ -7,7 +7,7 @@
             var keyChange = false; //wcisniety inny przycisk niz wczesniej
             var numberOfKeysPressed = 0;
 
-            console.log("directive dziala");
+            //console.log("directive dziala");
 
             $document.bind("keydown keyup", keychangeEvent);
             $document.bind("keydown", keypressEvent);

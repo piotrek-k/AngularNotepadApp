@@ -1,0 +1,10 @@
+<div class="wrapper">
+    <input id="{{inputId}}" class="{{inputClass}}" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="ngModel" ng-keydown="keyDown($event)" focus-on="{{inputId}}" />
+    <table class="suggestionList" ng-show="showSuggestions">
+        <tr ng-repeat="sg in suggestions" ng-class="{highlighedSuggestion: $index == highlightedSuggestion}" ng-mousedown="suggestionClicked($index, $event)">
+            <td ng-repeat="nt in sg.NoteTags" style="padding: 0rem 1rem">
+                {{nt.Tag.Name}}
+            </td>
+        </tr>
+    </table>
+</div> 
