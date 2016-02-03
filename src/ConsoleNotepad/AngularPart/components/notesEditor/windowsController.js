@@ -6,7 +6,6 @@
 
     $scope.addWindow = function (index) {
         var newIndex = 0;
-        //console.log("addWindow");
         if (index == undefined) {
             $scope.numberOfWindows.push($scope.preventDuplicates);
             newIndex = $scope.numberOfWindows.length - 1;

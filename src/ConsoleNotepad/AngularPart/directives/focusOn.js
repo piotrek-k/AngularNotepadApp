@@ -30,6 +30,7 @@ app.factory('focusOn', function ($rootScope, $timeout) {
         $timeout(function () {
             //console.log("focusOn" + name);
             $rootScope.$broadcast('focusOn', name);
+            console.log("called " + name);
         });
     }
 });

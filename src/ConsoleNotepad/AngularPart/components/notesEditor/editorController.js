@@ -20,7 +20,7 @@
     $scope.noteType = ""; //typ notatki, dostosowuje edytor
 
     getPartsByTag(); //ładuje notatkę która nie ma tagów (strona startowa)
-    focusOn("smartBar"+$scope.windowId);
+    //focusOn("smartBar"+$scope.windowId);
 
     $scope.setWindowID = function (index) {
         console.log("windowID: " + index)

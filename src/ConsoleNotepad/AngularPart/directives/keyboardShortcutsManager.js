@@ -1,4 +1,4 @@
-﻿app.directive('keyboardShortcutsManager', function () {
+﻿app.directive('keyboardShortcutsManager', function ($document) {
     return {
         restrict: 'AE',
         scope: false, //uzywam scope controllera w któym jest directive
@@ -45,13 +45,16 @@
                         e.preventDefault();
                     }
 
-                    if (arePressed(["alt"])) {
-                        console.log("Number: " + getNumberPressed());
+                    if (arePressed(["alt", "*"])) {
+                        var number = getNumberPressed();
+                        scope.jumpToWindow(number-1);
                     }
                 }
             }
 
             function arePressed(a) {
+                //* - dowolny przycisk
+
                 //console.log("a length: " + a.length);
                 if (a == undefined || a == null || numberOfKeysPressed != a.length) {
                     return false;
@@ -59,7 +62,7 @@
                 for (var x in a) {
                     //console.log("name to id: " + nameToID(a[x]));
                     //var result = true;
-                    if (!scope.keysPressed[nameToID(a[x])]) {
+                    if (!scope.keysPressed[nameToID(a[x])] && a[x] != "*") {
                         return false; //jeden z przycisków nie jest wciśnięty
                     }
                     //return result;
@@ -68,6 +71,7 @@
             }
 
             function getNumberPressed() {
+                //console.dir(scope.keysPressed);
                 for (var num = 49; num < 57; num++) { //sprawdzenie wszystkich liczb
                     if (scope.keysPressed[num]) {
                         return parseInt(String.fromCharCode(num));
