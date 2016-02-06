@@ -14,10 +14,10 @@
                 //console.log("!!!");
 
                 if (event.keyCode == 32) { //space
-                    $scope.suggestions = notes.getSuggested($scope.ngModel).success(function (data) {
+                    $scope.suggestions = notes.getSuggested($scope.ngModel).then(function (response) {
                         //console.table(data);
-                        $scope.suggestions = data;
-                    });
+                        $scope.suggestions = response.data;
+                    }, null);
                     console.log("Suggestions refreshed");
                 }
 
@@ -40,7 +40,7 @@
                     }
                     else {
                         //wywołaj podaną w atrybutach funkcję
-                        $scope.callback();
+                        $scope.callback()();
                     }
                 }
 

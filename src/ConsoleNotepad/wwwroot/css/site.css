@@ -130,7 +130,7 @@ textarea {
         position: absolute;
         background-color: #331100;
         box-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
-        z-index: 2;
+        z-index: 20;
         /*bottom: 0;*/
     }
 

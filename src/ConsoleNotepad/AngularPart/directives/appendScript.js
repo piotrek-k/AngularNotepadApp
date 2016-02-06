@@ -7,7 +7,8 @@
         },
         link: function (scope, elem, attrs) {
             console.log("loading script " + scope.noteName);
-            notes.getByTag(scope.noteName).success(function (noteData) {
+            notes.getByTag(scope.noteName).then(function (response) {
+                var noteData = response.data;
                 console.table(noteData);
                 scope.currentNoteId = noteData.NoteId;
                 //checkForSpecialTags($scope.smartBar);
@@ -32,7 +33,7 @@
                         console.error("Nieprawidlowa ilosc partow: " + data.length);
                     }
                 });
-            });
+            }, null);
         }
     };
 });

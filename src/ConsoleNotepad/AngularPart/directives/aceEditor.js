@@ -28,8 +28,14 @@
             editor.setTheme('ace/theme/monokai');
 
             //var MarkdownMode = require('ace/mode/markdown').Mode;
-            console.log("language: " + attrs.ace);
-            editor.getSession().setMode("ace/mode/" + attrs.ace);
+            var colorLanguage;
+            if (attrs.ace == "Code") {
+                colorLanguage = "javascript";
+            } else if (attrs.ace == "View") {
+                colorLanguage = "html";
+            }
+            console.log("language: " + colorLanguage);
+            editor.getSession().setMode("ace/mode/" + colorLanguage);
 
             // set editor options
             editor.setShowPrintMargin(false);

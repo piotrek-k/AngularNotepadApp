@@ -8,9 +8,10 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations.DataDb
 {
     [DbContext(typeof(DataDbContext))]
-    partial class DataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160205195154_NoteSpecials")]
+    partial class NoteSpecials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -22,6 +23,8 @@ namespace ConsoleNotepad.Migrations.DataDb
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("CreationDate");
+
+                    b.Property<int>("Type");
 
                     b.HasKey("NoteId");
                 });
@@ -62,7 +65,7 @@ namespace ConsoleNotepad.Migrations.DataDb
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("Type");
+                    b.Property<bool>("Special");
 
                     b.HasKey("TagId");
                 });

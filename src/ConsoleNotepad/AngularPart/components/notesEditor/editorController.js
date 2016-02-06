@@ -1,4 +1,4 @@
-﻿app.controller('editorController', function ($scope, notes, parts, focusOn, $element) {
+﻿app.controller('editorController', function ($scope, notes, parts, focusOn, $element, $timeout) {
     $scope.windowId = 0;
 
     $scope.suggestions = {};
@@ -16,8 +16,8 @@
     $scope.activePart = 0;
     //$scope.theOnlyPartData = "jakies costam"; //dla kodu
 
-    $scope.onePartNote = false; //notatki z kodem mogą mieć tylko jeden part, chowa przycisk
-    $scope.noteType = ""; //typ notatki, dostosowuje edytor
+    //$scope.onePartNote = false; //notatki z kodem mogą mieć tylko jeden part, chowa przycisk
+    $scope.noteType = "Normal"; //typ notatki, dostosowuje edytor
 
     getPartsByTag(); //ładuje notatkę która nie ma tagów (strona startowa)
     //focusOn("smartBar"+$scope.windowId);
@@ -49,16 +49,29 @@
     }
 
     function getPartsByTag() {
-        if ($scope.smartBar == undefined) {
-            $scope.smartBar = "";
-        }
-        notes.getByTag($scope.smartBar).success(function (noteData) {
-            //console.table(noteData);
-            $scope.currentNoteId = noteData.NoteId;
-            //checkForSpecialTags($scope.smartBar);
+        //timeout jest potrzebny, bo bez niego smartBar nie zdąży się zaktualizować
+        $timeout(function () {
+            if ($scope.smartBar == undefined) {
+                $scope.smartBar = "";
+            }
+            console.log("getting parts" + $scope.smartBar);
+            notes.getByTag($scope.smartBar).then(function (response) {
+                //console.log("noteData");
+                console.dir(response);
+                //console.table(noteData);
+                $scope.currentNoteId = response.data.NoteId;
+                $scope.noteType = notes.typeToString(response.data.TypeOfNote);
+                console.log("$scope.noteType" + $scope.noteType);
+                //checkForSpecialTags($scope.smartBar);
 
-            $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-                whenPartsReceived(data);
+                $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+                    whenPartsReceived(data);
+                });
+            }, function (response) {
+                if (response.status == 404) {
+                    //nie znaleziono notatki, mozna utworzyć nową
+                    $scope.askToAddNewNote = $scope.smartBar;
+                }
             });
         });
     }
@@ -96,8 +109,8 @@
     }
 
     function whenPartsReceived(data) {
-        console.log("Parts reeived");
-        console.table(data);
+        //console.log("Parts reeived");
+        //console.table(data);
         for (var p in data) {
 
             if (data[p].SettingsAsJSON == undefined) {
@@ -118,15 +131,15 @@
         }
 
         $scope.parts = data;
-        console.log("scope Parts reeived");
-        console.table($scope.parts);
+       // console.log("scope Parts reeived");
+       // console.table($scope.parts);
         //console.log("Got data: ");
         //console.table(data);
         partsCheckForNull();
 
         //rozwiązanie tymczasowe, tu trzeba ustawić czy wyświetlać tekst czy edytor
-        $scope.noteType = "text";
-        $scope.onePartNote = false;
+        //$scope.noteType = "text";
+        //$scope.onePartNote = false;
         //    if (specialTagType == "code" || specialTagType == "c") {
         //        $scope.noteType = "javascript";
         //        $scope.onePartNote = true;
@@ -151,6 +164,17 @@
         console.log("callback1");
 
         getPartsByTag();
+    }
+    
+    $scope.addNote = function(name){
+        var newNote = {
+            "TagsToAdd": name
+        };
+
+        notes.post(newNote).then(function (response) {
+            $scope.askToAddNewNote = undefined;
+            getPartsByTag(name);
+        });
     }
 
     //function checkForSpecialTags(tagsAsString) {

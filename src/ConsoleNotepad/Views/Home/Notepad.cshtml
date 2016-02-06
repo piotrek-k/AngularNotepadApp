@@ -21,6 +21,11 @@
             @*{{currentNoteId}}*@
             @*<append-script note-name="'!code scripts test'"></append-script>*@
             <div id="noteParts">
+                <div ng-show="askToAddNewNote != undefined" class="settingsBox">
+                    Notatka '{{askToAddNewNote}}' nie istnieje.<br />
+                    <button ng-click="addNote(askToAddNewNote)">Dodaj</button>
+                    <button ng-click="askToAddNewNote=undefined">Ignoruj</button>
+                </div>
                 <div class="notePart" ng-repeat="p in parts">
                     <div class="notePartEditableWithDecorations">
                         <div class="partDecoration"> > </div>
@@ -47,14 +52,14 @@
                             <view-loader ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
                         </div>
                         <div ng-if="p.Settings['view'] == undefined">
-                            <div ng-if="noteType=='text'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
-                            <div ng-if="noteType=='javascript'||noteType=='html'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
+                            <div ng-if="noteType=='Normal'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
+                            <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button ng-if="!onePartNote" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
+            <button ng-if="noteType!='Code'&&noteType!='View'" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
 
             <div class="windowOptions">
                 <span class="glyphicon glyphicon-plus" ng-click="addWindow($index)"></span>

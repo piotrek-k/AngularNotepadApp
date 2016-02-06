@@ -10,6 +10,7 @@
 /// <reference path="../angularpart/directives/contenteditable.js" />
 /// <reference path="../angularpart/directives/focuson.js" />
 /// <reference path="../angularpart/directives/keyboardshortcutsmanager.js" />
+/// <reference path="../angularpart/directives/suggestionlist.js" />
 /// <reference path="../angularpart/directives/viewloader.js" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="js/site.js" />

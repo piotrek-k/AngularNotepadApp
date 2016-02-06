@@ -26,7 +26,8 @@
                 //console.log("adres: " + adress);
                 if (adress != undefined && adress != "") {
                     //console.log("loading note");
-                    notes.getByTag(adress).success(function (noteData) {
+                    notes.getByTag(adress).then(function (response) {
+                        var noteData = response.data;
                         //console.log("noteloaded");
                         //console.table(noteData);
                         var currentNoteId = noteData.NoteId;
@@ -47,7 +48,8 @@
             }
 
             function loadScript(adress) {
-                notes.getByTag(adress).success(function (noteData) {
+                notes.getByTag(adress).then(function (response) {
+                    var noteData = response.data;
                     var currentNoteId = noteData.NoteId;
                     parts.get(currentNoteId).success(function (data) {
                         if (data.length == 1) {
