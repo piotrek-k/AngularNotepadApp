@@ -1,5 +1,5 @@
 ﻿app.factory('notes', ['$http', function ($http) {
-    
+
     var notes = {};
 
     notes.typeToString = function (type) {
@@ -20,16 +20,6 @@
                 return "Normal";
         }
     }
-    //notes.get = function () {
-        //TODO
-        //return $http.get('/api/notes')
-        //          .success(function (data) {
-        //              return data;
-        //          })
-        //          .error(function (err) {
-        //              return err;
-        //          });
-    //}
 
     //pobierz sugerowane notatki (mające podane tagi)
     notes.getSuggested = function (searchText) {
@@ -39,8 +29,15 @@
             headers: {
                 'Accept': 'application/json'
             }
-        }).then(null, function (response) {
-            console.error("Couldn't get suggested notes");
+        }).then(function (response) {
+            //success
+            response.data.TagsToAdd = response.data.TagsAsSingleString; //uzupelniam pole tekstowe w formularzu edycji notatki
+            return response;
+        }, function (response) {
+            //error
+            console.error("Error while using notes.getSuggested");
+            console.dir(response);
+            throw response;
         });
     }
 
@@ -53,13 +50,19 @@
             headers: {
                 'Accept': 'application/json'
             }
+        }).then(function (response) {
+            //success
+            response.data.TagsToAdd = response.data.TagsAsSingleString; //uzupelniam pole tekstowe w formularzu edycji notatki
+            return response;
+        }, function (response) {
+            //error
+            console.error("Error while using notes.getByTag");
+            console.dir(response);
+            throw response;
         });
     }
 
     notes.post = function (data) {
-        //nie testowane
-        //console.log("post");
-        //console.dir(data);
         return $http({
             method: 'POST',
             url: '/api/Notes',
@@ -69,6 +72,7 @@
             }
         }).then(null, function (response) {
             console.error("Couldn't post a note");
+            throw response;
         });
     }
 
@@ -77,13 +81,14 @@
         console.table(note);
         return $http({
             method: 'PUT',
-            url: '/api/Notes/' + part.ID,
+            url: '/api/Notes/' + note.NoteId,
             data: note,
             headers: {
                 'Accept': 'application/json'
             }
-        }).then(null, function (response) {
+        }).then(function (response) { return response; }, function (response) {
             console.error("Couldn't put a note");
+            throw response;
         });
     }
 

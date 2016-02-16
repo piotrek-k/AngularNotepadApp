@@ -496,6 +496,7 @@ app.controller('editorController', function ($scope, notes, parts, focusOn, $ele
             Data: "new"
         }
     ];
+    $scope.currentNoteObject = {};
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
     //$scope.focusOnPart = 0;
@@ -542,6 +543,7 @@ app.controller('editorController', function ($scope, notes, parts, focusOn, $ele
             }
             console.log("getting parts" + $scope.smartBar);
             notes.getByTag($scope.smartBar).then(function (response) {
+                console.log("getPartsByTag success response");
                 //console.log("noteData");
                 console.dir(response);
                 //console.table(noteData);
@@ -549,13 +551,16 @@ app.controller('editorController', function ($scope, notes, parts, focusOn, $ele
                 $scope.noteType = notes.typeToString(response.data.TypeOfNote);
                 console.log("$scope.noteType" + $scope.noteType);
                 //checkForSpecialTags($scope.smartBar);
+                $scope.currentNoteObject = response.data;
 
                 $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
                     whenPartsReceived(data);
                 });
             }, function (response) {
+                console.log("getPartsByTag eror response");
                 if (response.status == 404) {
                     //nie znaleziono notatki, mozna utworzyć nową
+                    console.log("NIE ZNALEZIONO NOTATKI");
                     $scope.askToAddNewNote = $scope.smartBar;
                 }
             });
@@ -663,34 +668,18 @@ app.controller('editorController', function ($scope, notes, parts, focusOn, $ele
         });
     }
 
-    //function checkForSpecialTags(tagsAsString) {
-    //    //może istnieć tylko jeden tag specjalny na notatke
-    //    var a = tagsAsString.split(" ");
-    //    var specialTagType = "";
-
-    //    for (var x in a) {
-    //        if (a[x].charAt(0) == "!") { //to jest tag specjalny
-    //            specialTagType = a[x].substring(1); //utnij pierwszy znak
-    //            break;
-    //        }
-    //    }
-
-    //    if (specialTagType == "code" || specialTagType == "c") {
-    //        $scope.noteType = "javascript";
-    //        $scope.onePartNote = true;
-    //    }
-    //    else if (specialTagType == "view" || specialTagType == "v") {
-    //        $scope.noteType = "html";
-    //        $scope.onePartNote = true;
-    //    }
-    //    else {
-    //        $scope.noteType = "text";
-    //        $scope.onePartNote = false;
-    //    }
-    //}
+    $scope.saveChangesToNote = function () {
+        notes.put($scope.currentNoteObject).then(function (response) {
+            console.log("saving note data success")
+            $scope.smartBar = $scope.currentNoteObject.TagsToAdd;
+            console.dir(response);
+            console.log($scope.smartBar)
+            getPartsByTag();
+        });
+    }
 });
 app.factory('notes', ['$http', function ($http) {
-    
+
     var notes = {};
 
     notes.typeToString = function (type) {
@@ -711,16 +700,6 @@ app.factory('notes', ['$http', function ($http) {
                 return "Normal";
         }
     }
-    //notes.get = function () {
-        //TODO
-        //return $http.get('/api/notes')
-        //          .success(function (data) {
-        //              return data;
-        //          })
-        //          .error(function (err) {
-        //              return err;
-        //          });
-    //}
 
     //pobierz sugerowane notatki (mające podane tagi)
     notes.getSuggested = function (searchText) {
@@ -730,8 +709,15 @@ app.factory('notes', ['$http', function ($http) {
             headers: {
                 'Accept': 'application/json'
             }
-        }).then(null, function (response) {
-            console.error("Couldn't get suggested notes");
+        }).then(function (response) {
+            //success
+            response.data.TagsToAdd = response.data.TagsAsSingleString; //uzupelniam pole tekstowe w formularzu edycji notatki
+            return response;
+        }, function (response) {
+            //error
+            console.error("Error while using notes.getSuggested");
+            console.dir(response);
+            throw response;
         });
     }
 
@@ -744,13 +730,19 @@ app.factory('notes', ['$http', function ($http) {
             headers: {
                 'Accept': 'application/json'
             }
+        }).then(function (response) {
+            //success
+            response.data.TagsToAdd = response.data.TagsAsSingleString; //uzupelniam pole tekstowe w formularzu edycji notatki
+            return response;
+        }, function (response) {
+            //error
+            console.error("Error while using notes.getByTag");
+            console.dir(response);
+            throw response;
         });
     }
 
     notes.post = function (data) {
-        //nie testowane
-        //console.log("post");
-        //console.dir(data);
         return $http({
             method: 'POST',
             url: '/api/Notes',
@@ -760,6 +752,7 @@ app.factory('notes', ['$http', function ($http) {
             }
         }).then(null, function (response) {
             console.error("Couldn't post a note");
+            throw response;
         });
     }
 
@@ -768,13 +761,14 @@ app.factory('notes', ['$http', function ($http) {
         console.table(note);
         return $http({
             method: 'PUT',
-            url: '/api/Notes/' + part.ID,
+            url: '/api/Notes/' + note.NoteId,
             data: note,
             headers: {
                 'Accept': 'application/json'
             }
-        }).then(null, function (response) {
+        }).then(function (response) { return response; }, function (response) {
             console.error("Couldn't put a note");
+            throw response;
         });
     }
 

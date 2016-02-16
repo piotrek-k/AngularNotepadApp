@@ -29,10 +29,12 @@ namespace ConsoleNotepad.Models
         public DataDbContext()
         {
             //this.Configuration.LazyLoadingEnabled = false;
+            
         }
 
         public DbSet<Note> Notes { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Part> Parts { get; set; }
+        public DbSet<NoteTag> NoteTags { get; set; }
     }
 }

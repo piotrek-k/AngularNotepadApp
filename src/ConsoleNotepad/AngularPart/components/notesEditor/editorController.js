@@ -10,6 +10,7 @@
             Data: "new"
         }
     ];
+    $scope.currentNoteObject = {};
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
     //$scope.focusOnPart = 0;
@@ -56,6 +57,7 @@
             }
             console.log("getting parts" + $scope.smartBar);
             notes.getByTag($scope.smartBar).then(function (response) {
+                console.log("getPartsByTag success response");
                 //console.log("noteData");
                 console.dir(response);
                 //console.table(noteData);
@@ -63,13 +65,16 @@
                 $scope.noteType = notes.typeToString(response.data.TypeOfNote);
                 console.log("$scope.noteType" + $scope.noteType);
                 //checkForSpecialTags($scope.smartBar);
+                $scope.currentNoteObject = response.data;
 
                 $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
                     whenPartsReceived(data);
                 });
             }, function (response) {
+                console.log("getPartsByTag eror response");
                 if (response.status == 404) {
                     //nie znaleziono notatki, mozna utworzyć nową
+                    console.log("NIE ZNALEZIONO NOTATKI");
                     $scope.askToAddNewNote = $scope.smartBar;
                 }
             });
@@ -177,29 +182,13 @@
         });
     }
 
-    //function checkForSpecialTags(tagsAsString) {
-    //    //może istnieć tylko jeden tag specjalny na notatke
-    //    var a = tagsAsString.split(" ");
-    //    var specialTagType = "";
-
-    //    for (var x in a) {
-    //        if (a[x].charAt(0) == "!") { //to jest tag specjalny
-    //            specialTagType = a[x].substring(1); //utnij pierwszy znak
-    //            break;
-    //        }
-    //    }
-
-    //    if (specialTagType == "code" || specialTagType == "c") {
-    //        $scope.noteType = "javascript";
-    //        $scope.onePartNote = true;
-    //    }
-    //    else if (specialTagType == "view" || specialTagType == "v") {
-    //        $scope.noteType = "html";
-    //        $scope.onePartNote = true;
-    //    }
-    //    else {
-    //        $scope.noteType = "text";
-    //        $scope.onePartNote = false;
-    //    }
-    //}
+    $scope.saveChangesToNote = function () {
+        notes.put($scope.currentNoteObject).then(function (response) {
+            console.log("saving note data success")
+            $scope.smartBar = $scope.currentNoteObject.TagsToAdd;
+            console.dir(response);
+            console.log($scope.smartBar)
+            getPartsByTag();
+        });
+    }
 });

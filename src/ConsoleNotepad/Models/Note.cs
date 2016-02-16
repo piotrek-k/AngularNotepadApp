@@ -27,18 +27,21 @@ namespace ConsoleNotepad.Models
             {
                 int numberOfSpecials = 0;
                 Tag.SpecialTypes toReturn = Tag.SpecialTypes.Normal;
-                foreach(var x in NoteTags)
+                foreach (var x in NoteTags)
                 {
-                    if(x.Tag.Type != Tag.SpecialTypes.Normal)
+                    if (x.Tag != null)
                     {
-                        numberOfSpecials++;
-                        toReturn = x.Tag.Type;
-                    }
+                        if (x.Tag.Type != Tag.SpecialTypes.Normal)
+                        {
+                            numberOfSpecials++;
+                            toReturn = x.Tag.Type;
+                        }
 
-                    if(numberOfSpecials > 1)
-                    {
-                        TooManySpecialTags = true;
-                        break;
+                        if (numberOfSpecials > 1)
+                        {
+                            TooManySpecialTags = true;
+                            break;
+                        }
                     }
                 }
                 return toReturn;
@@ -69,18 +72,18 @@ namespace ConsoleNotepad.Models
         }
 
         [NotMapped]
-        public List<int> ArrayWithTagsID
+        public List<string> ArrayWithTagsNames
         {
             get
             {
-                List<int> result = new List<int>();
+                List<string> result = new List<string>();
                 if (NoteTags != null)
                 {
                     foreach (var nt in NoteTags)
                     {
                         if (nt.Tag != null)
                         {
-                            result.Add(nt.Tag.TagId);
+                            result.Add(nt.Tag.Name);
                         }
                     }
                 }

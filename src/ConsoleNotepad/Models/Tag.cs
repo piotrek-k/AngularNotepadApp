@@ -11,7 +11,6 @@ namespace ConsoleNotepad.Models
         public Tag()
         {
             NoteTags = new HashSet<NoteTag>();
-            //Type = StringToSpecialsConversion(Name);
         }
 
         public int TagId { get; set; }
@@ -25,19 +24,6 @@ namespace ConsoleNotepad.Models
                 return StringToSpecialsConversion(Name);
             }
         }
-
-        //[NotMapped]
-        //public bool Special
-        //{
-        //    get
-        //    {
-        //        if (Name.StartsWith("!"))
-        //        {
-        //            return true;
-        //        }
-        //        return false;
-        //    }
-        //}
 
         public virtual ICollection<NoteTag> NoteTags { get; set; }
 

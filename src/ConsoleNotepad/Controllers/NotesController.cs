@@ -8,6 +8,7 @@ using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using ConsoleNotepad.OtherClasses;
+using System.Diagnostics;
 
 namespace ConsoleNotepad.Controllers
 {
@@ -42,7 +43,7 @@ namespace ConsoleNotepad.Controllers
             * Dzia³a to tak: zwracane s¹ wszystkie notatki, które maj¹ przypisane wszystkie z podanych tagów
             */
 
-            if(searchText == null)
+            if (searchText == null)
             {
                 return HttpBadRequest(TypesOfProblems.TagsOfNotesNotProvided);
             }
@@ -163,7 +164,7 @@ namespace ConsoleNotepad.Controllers
 
             var finalResult = finalNotes.FirstOrDefault();
 
-            if(finalResult == null)
+            if (finalResult == null)
             {
                 return HttpNotFound();
             }
@@ -215,12 +216,11 @@ namespace ConsoleNotepad.Controllers
         }
 
         // PUT: api/Notes/5
+        //edytowalne tylko tagi
+        //aby dodaæ tagi nale¿y wpisaæ je w "TagsToAdd"
         [HttpPut("{id}")]
         public IActionResult PutNote(int id, [FromBody] Note note)
         {
-            //edytowalne tylko tagi
-            //aby dodaæ tagi nale¿y wpisaæ je w "TagsToAdd"
-
             if (!ModelState.IsValid)
             {
                 return HttpBadRequest(ModelState);
@@ -231,32 +231,29 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest();
             }
 
-            //db.Entry(note).State = EntityState.Modified;
-
-            Note noteInDb = db.Notes.FirstOrDefault(x => x.NoteId == note.NoteId);
-            if (note.TagsToAdd != "" && note.TagsToAdd != null)
-            {
-                noteInDb.NoteTags = new List<NoteTag>();
-
-                //string[] separators = { " " };
-                //List<string> tags = note.TagsToAdd.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
-                //foreach (var t in tags)
-                //{
-                //    Tag tagInDb = db.Tags.FirstOrDefault(x => x.Name == t);
-
-                //    if (tagInDb == null)
-                //    {
-                //        tagInDb = db.Tags.Add(new Tag(t)).Entity;
-                //    }
-
-                //    note.NoteTags.Add(new NoteTag { Tag = tagInDb });
-                //}
-                noteInDb = TagsToAddToTags(note);
-            }
-
             try
             {
-                db.SaveChanges();
+
+                if (note.TagsToAdd != "" && note.TagsToAdd != null && note.TagsToAdd != note.TagsAsSingleString)
+                {
+                    List<string> newTags = note.TagsToAdd.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    if (db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, newTags) && x.NoteId != note.NoteId))
+                    {
+                        return HttpBadRequest("Notatka o tych tagach ju¿ istnieje");
+                    }
+                    else
+                    {
+                        var dbNote = db.Notes.Include(x => x.NoteTags).FirstOrDefault(x => x.NoteId == note.NoteId);
+                        db.NoteTags.RemoveRange(dbNote.NoteTags.ToList());
+                        //Functions.DisplayTrackedEntities(db.ChangeTracker);
+                        db.SaveChanges();
+
+                        dbNote.NoteTags = TagsToAddToTags(note).NoteTags;
+                        //Functions.DisplayTrackedEntities(db.ChangeTracker);
+                        db.SaveChanges();
+                    }
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -268,6 +265,10 @@ namespace ConsoleNotepad.Controllers
                 {
                     throw;
                 }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
             }
 
             return new HttpStatusCodeResult(StatusCodes.Status204NoContent);
@@ -287,7 +288,7 @@ namespace ConsoleNotepad.Controllers
 
             note = TagsToAddToTags(note);
 
-            if(db.Notes.Include(x => x.NoteTags).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsID, note.ArrayWithTagsID)))
+            if (db.Notes.Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, note.ArrayWithTagsNames)))
             {
                 return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
             }
@@ -342,15 +343,7 @@ namespace ConsoleNotepad.Controllers
                     tagInDb = db.Tags.Add(new Tag { Name = t }).Entity;
                 }
 
-                //if (tagInDb.Special)
-                //{
-                //    if(note.TypeOfNote != Note.SpecialTypes.Normal) //wartoœæ zosta³a ju¿ przypisana!
-                //    {
-                //        note.TooManySpecialTags = true;
-                //    }
-                //    note.TypeOfNote = StringToSpecialsConversion(tagInDb.Name);
-                //}
-
+                //note.NoteTags.Add(new NoteTag { Tag = tagInDb });
                 note.NoteTags.Add(new NoteTag { Tag = tagInDb });
             }
 
@@ -394,6 +387,6 @@ namespace ConsoleNotepad.Controllers
             return db.Notes.Count(e => e.NoteId == id) > 0;
         }
 
-        
+
     }
 }

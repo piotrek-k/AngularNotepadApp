@@ -61,6 +61,15 @@
 
             <button ng-if="noteType!='Code'&&noteType!='View'" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
 
+            {{currentNoteObject.NoteId}}
+            <a ng-show="!showNoteEditForm" ng-click="showNoteEditForm=true">Ustawienia notatki</a>
+            <div ng-show="showNoteEditForm" class="settingsBox">
+                <p>Nowe Tagi:</p>
+                <input type="text" ng-model="currentNoteObject.TagsToAdd" />
+                <button ng-click="saveChangesToNote()">Zapisz</button>
+                <button ng-click="showNoteEditForm=false">Zamknij</button>
+            </div>
+
             <div class="windowOptions">
                 <span class="glyphicon glyphicon-plus" ng-click="addWindow($index)"></span>
                 <span class="glyphicon glyphicon-remove" ng-click="removeWindow($index)"></span>

@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Data.Entity;
 using System.Threading.Tasks;
+using Microsoft.Data.Entity.ChangeTracking;
+using System.Diagnostics;
 
 namespace ConsoleNotepad.OtherClasses
 {
@@ -31,7 +34,22 @@ namespace ConsoleNotepad.OtherClasses
                     return false;
                 }
             }
-            return cnt.Values.All(c => c == 0);
+            bool result = cnt.Values.All(c => c == 0);
+            return result;
+        }
+
+        public static void DisplayTrackedEntities(ChangeTracker changeTracker)
+        {
+            Trace.WriteLine("");
+
+            var entries = changeTracker.Entries();
+            foreach (var entry in entries)
+            {
+                Trace.WriteLine("Entity Name: " + entry.Entity.GetType().FullName);
+                Trace.WriteLine("Status: " + entry.State.ToString());
+            }
+            Trace.WriteLine("");
+            Trace.WriteLine("---------------------------------------");
         }
     }
 }
