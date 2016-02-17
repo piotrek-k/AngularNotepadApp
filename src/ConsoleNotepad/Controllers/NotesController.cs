@@ -9,11 +9,13 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using ConsoleNotepad.OtherClasses;
 using System.Diagnostics;
+using Microsoft.AspNet.Authorization;
 
 namespace ConsoleNotepad.Controllers
 {
     [Produces("application/json")]
     [Route("api/Notes")]
+    [Authorize("Bearer")]
     public class NotesController : Controller
     {
         private DataDbContext db;
@@ -32,6 +34,7 @@ namespace ConsoleNotepad.Controllers
         [HttpGet]
         public IEnumerable<Note> GetNotes()
         {
+            var a = User.Identity.Name;
             return db.Notes;
         }
 

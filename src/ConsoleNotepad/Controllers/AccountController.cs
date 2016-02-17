@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using ConsoleNotepad.Models;
 using ConsoleNotepad.Services;
 using ConsoleNotepad.ViewModels.Account;
+using ConsoleNotepad.OtherClasses;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Principal;
 
 namespace ConsoleNotepad.Controllers
 {
@@ -23,19 +26,21 @@ namespace ConsoleNotepad.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly TokenAuthManager _tokenManager;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory, TokenAuthManager tokenOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _tokenManager = tokenOptions;
         }
 
         //
@@ -85,6 +90,42 @@ namespace ConsoleNotepad.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetToken([FromBody]LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation(1, "User logged in.");
+                    //return RedirectToLocal(returnUrl);
+                    DateTime? expires = DateTime.UtcNow.AddMinutes(60);
+                    var token = _tokenManager.TokenGenerator(model.Email, expires);
+                    //return new { authenticated = true, entityId = 1, token = token, tokenExpires = expires };
+                    return Ok(new { authenticated = true, entityId = 1, token = token, tokenExpires = expires });
+                }
+                //if (result.RequiresTwoFactor)
+                //{
+                //    return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                //}
+                //if (result.IsLockedOut)
+                //{
+                //    _logger.LogWarning(2, "User account locked out.");
+                //    return View("Lockout");
+                //}
+                else
+                {
+                    //ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return HttpBadRequest("Invalid login attempt.");
+                }
+            }
+            return HttpBadRequest("Invalid Model State.");
+        }
+
+        
 
         //
         // GET: /Account/Register

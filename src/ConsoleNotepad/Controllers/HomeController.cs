@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using ConsoleNotepad.Models;
 using Microsoft.Data.Entity;
+using ConsoleNotepad.OtherClasses;
+using Microsoft.AspNet.Authorization;
 
 namespace ConsoleNotepad.Controllers
 {
     public class HomeController : Controller
     {
         private DataDbContext db;
+        private readonly TokenAuthManager _tokenOptions;
 
-        public HomeController(DataDbContext context)
+        public HomeController(DataDbContext context, TokenAuthManager tokenOptions)
         {
             db = context;
+            _tokenOptions = tokenOptions;
         }
 
         public IActionResult Index()
@@ -22,9 +26,11 @@ namespace ConsoleNotepad.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Notepad()
         {
             var a = db.Notes.Include(x => x.NoteTags).ToList();
+            ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.Identity.Name, DateTime.UtcNow.AddMinutes(60));
             return View();
         }
 

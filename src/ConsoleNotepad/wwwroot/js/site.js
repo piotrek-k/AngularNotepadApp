@@ -484,6 +484,21 @@ app.directive('viewLoader', function (notes, parts, $compile) {
         }
     };
 });
+//app.factory('authorization', function () {
+//    var data = {};
+
+//    var token = "";
+
+//    data.loadTokenToMemory = function () {
+//        localStorage.setItem("Token", $rootScope.authToken);
+//        $rootScope.authToken = "";
+//    }
+
+//    data.getToken = function () {
+//    }
+
+//    return data;
+//});
 app.controller('editorController', function ($scope, notes, parts, focusOn, $element, $timeout) {
     $scope.windowId = 0;
 

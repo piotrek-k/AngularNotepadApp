@@ -8,8 +8,8 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations
 {
     [DbContext(typeof(AuthorizationDbContext))]
-    [Migration("20151230095800_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20160216110914_authData")]
+    partial class authData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

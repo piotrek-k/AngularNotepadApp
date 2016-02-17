@@ -10,7 +10,7 @@ using ConsoleNotepad.Models;
 
 namespace ConsoleNotepad.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(AuthorizationDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

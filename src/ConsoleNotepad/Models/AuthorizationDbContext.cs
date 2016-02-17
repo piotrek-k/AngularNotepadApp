@@ -7,7 +7,7 @@ using Microsoft.Data.Entity;
 
 namespace ConsoleNotepad.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class AuthorizationDbContext : IdentityDbContext<ApplicationUser>
     {
         protected override void OnModelCreating(ModelBuilder builder)
         {
