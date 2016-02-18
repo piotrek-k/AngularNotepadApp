@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 30px;
     padding-bottom: 20px;
     background-color: #331100;
     color: white;
@@ -141,4 +141,67 @@ textarea {
     border: none;
     outline: none;
     z-index: 3;
+}
+
+
+/*
+    MNIEJSZY NAVBAR
+*/
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:4px !important; 
+    padding-bottom:0 !important;
+    height: 28px;
+}
+.navbar {min-height:28px !important;}
+
+.navbar button {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.navbar-right {
+    margin-right: 0px !important;
+}
+
+/*
+    LOGIN BOX
+*/
+
+.loginBox {
+    border: 1px gray solid;
+    background-color: darkslategrey;
+    padding: 1rem;
+    margin: auto;
+    text-align: center;
+    /*width: auto;*/
+    display: inline-block;
+
+    position: absolute;
+    left: 50%;
+    /*top: 50%;*/
+    width: 250px;
+    /*height: 210px;*/
+    margin-left: -125px;
+    margin-top: 10rem;
+}
+
+.loginBox input[type="text"] {
+    display: block;
+    margin: 0 auto;
+    /*width: 220px;
+    margin-left: -110px;
+    position: absolute;
+    left: 50%;*/
+}
+
+.loginBoxContainer {
+    width: 100%;
+}
+
+.loginBoxPart {
+    display: block;
+    padding-bottom: 1rem;
 }
