@@ -72,6 +72,8 @@ namespace ConsoleNotepad
                 .AddEntityFrameworkStores<AuthorizationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<MySignInManager<ApplicationUser>, MySignInManager<ApplicationUser>>(); //rzekomo dzięki temu można zastąpić SignInManagera swoim własnym
+
             //Token-based authentication https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample
             // *** CHANGE THIS FOR PRODUCTION USE ***
             // Here, we're generating a random key to sign tokens - obviously this means

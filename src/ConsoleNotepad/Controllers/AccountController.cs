@@ -22,7 +22,7 @@ namespace ConsoleNotepad.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly MySignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -30,7 +30,7 @@ namespace ConsoleNotepad.Controllers
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            MySignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory, TokenAuthManager tokenOptions)
@@ -82,7 +82,7 @@ namespace ConsoleNotepad.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Coś się nie zgadza. Upewnij się, że konto jest aktywne.");
                     return View(model);
                 }
             }
