@@ -5,11 +5,11 @@
     $scope.showSuggestions = false;
     $scope.highlightedSuggestion = -1;
     $scope.currentNoteId = 0;
-    $scope.parts = [
-        {
-            Data: "new"
-        }
-    ];
+    //$scope.parts = [
+    //    {
+    //        Data: "new"
+    //    }
+    //];
     $scope.currentNoteObject = {};
     var timeoutUpdate; //setTimeout to update Part
     var editingPartOptions = {};
@@ -115,7 +115,7 @@
 
     function whenPartsReceived(data) {
         //console.log("Parts reeived");
-        //console.table(data);
+        //console.dir(data);
         for (var p in data) {
 
             if (data[p].SettingsAsJSON == undefined) {
@@ -136,8 +136,8 @@
         }
 
         $scope.parts = data;
-       // console.log("scope Parts reeived");
-       // console.table($scope.parts);
+        // console.log("scope Parts reeived");
+        // console.table($scope.parts);
         //console.log("Got data: ");
         //console.table(data);
         partsCheckForNull();
@@ -167,11 +167,12 @@
 
     $scope.suggestionListCallback = function (noteId) {
         console.log("callback1");
-
+        $scope.parts = {};
+        $scope.askToAddNewNote = undefined;
         getPartsByTag();
     }
-    
-    $scope.addNote = function(name){
+
+    $scope.addNote = function (name) {
         var newNote = {
             "TagsToAdd": name
         };
@@ -190,5 +191,11 @@
             console.log($scope.smartBar)
             getPartsByTag();
         });
+    }
+
+    $scope.deleteSetting = function (partIndex, settingName) {
+        //console.log("pi: " + partIndex + " sn: " + settingName);
+        //console.dir($scope.parts);
+        delete $scope.parts[partIndex].Settings[settingName];
     }
 });

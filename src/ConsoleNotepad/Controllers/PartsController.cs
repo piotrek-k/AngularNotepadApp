@@ -24,7 +24,7 @@ namespace ConsoleNotepad.Controllers
         public IActionResult GetParts(int idOfNote)
         {
             //usun puste party
-            var a = _context.Parts.Where(x => x.NoteID == idOfNote && (String.IsNullOrWhiteSpace(x.Data) || x.Data == "&nbsp;"));
+            var a = _context.Parts.Where(x => x.NoteID == idOfNote && (String.IsNullOrWhiteSpace(x.Data) || x.Data == "&nbsp;") && (x.SettingsAsJSON == null || x.SettingsAsJSON == "{}"));
             var count = a.Count();
             if (a.Count() < 100)
             {
@@ -36,7 +36,7 @@ namespace ConsoleNotepad.Controllers
                 //niebezpiecznie duzo partsow do usuniecia
                 return Json(new { Error = "Zbyt duzo obiektów typu Part do usuniêcia. " + a.Count() });
             }
-            
+
 
             var data = _context.Parts.Where(x => x.NoteID == idOfNote).OrderBy(x => x.OrderPosition).ToList();
             return Ok(data);
@@ -67,7 +67,7 @@ namespace ConsoleNotepad.Controllers
         {
             if (!ModelState.IsValid)
             {
-                    return HttpBadRequest(ModelState);
+                return HttpBadRequest(ModelState);
             }
 
             if (id != part.ID)
@@ -105,7 +105,7 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            if(part.ID == -1)
+            if (part.ID == -1)
             {
                 return new HttpStatusCodeResult(StatusCodes.Status404NotFound);
             }

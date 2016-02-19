@@ -2,7 +2,11 @@
     padding-top: 30px;
     padding-bottom: 20px;
     background-color: #331100;
-    color: white;
+    /*background-color: #3B3B3B;*/
+    /*background-position: center;*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: black;
 }
 
 input {
@@ -17,13 +21,18 @@ input {
     background-color: rgba(255, 255, 255, 0.3);
     padding: 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+    margin: 10px 5px 0px 5px;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
+    padding: 10px;
+    /*padding-left: 15px;
     padding-right: 15px;
+    padding-top: 10px;
+    padding-top: 10px;*/
 }
 
 .notePadWindow {
@@ -31,7 +40,11 @@ input {
     margin: 1rem;
     word-wrap: break-word;
     padding: 0rem 1rem;
+    /*margin-top: 2rem;*/
     position: relative;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 div.table {
@@ -97,6 +110,10 @@ textarea {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+#noteParts{
+    
+}
+
 .notePart {
     /*border: solid 1px black;*/
     position: relative;
@@ -112,7 +129,7 @@ textarea {
 
 .partDecoration {
     position: absolute;
-    left: -1rem;
+    left: -0.5rem;
 }
 
 .partDecorationRight {
@@ -128,8 +145,11 @@ textarea {
 
     .wrapper .suggestionList {
         position: absolute;
-        background-color: #331100;
-        box-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
+        /*background-color: #331100;*/
+        background-color: rgba(0,0,0, 0.9);
+        /*box-shadow: 0px 0px 5px rgba(0,0,0, 0.8);*/
+        box-shadow: 1px 1px 5px rgba(255,255,255, 0.2);
+        color: white;
         z-index: 20;
         /*bottom: 0;*/
     }
@@ -137,7 +157,7 @@ textarea {
 .smartBar {
     width: 100%;
     color: black;
-    background-color: rgba(255,255,255, 0.1);
+    background-color: rgba(255,255,255, 0.4);
     border: none;
     outline: none;
     z-index: 3;
@@ -172,7 +192,8 @@ textarea {
 
 .loginBox {
     border: 1px gray solid;
-    background-color: darkslategrey;
+    /*background-color: darkslategrey;*/
+    background-color: rgba(0,0,0, 0.4);
     padding: 1rem;
     margin: auto;
     text-align: center;
@@ -204,4 +225,11 @@ textarea {
 .loginBoxPart {
     display: block;
     padding-bottom: 1rem;
+}
+
+/*
+    GLYPHICONY
+*/
+.glyphicon {
+    color: rgba(0,0,0,0.8);
 }

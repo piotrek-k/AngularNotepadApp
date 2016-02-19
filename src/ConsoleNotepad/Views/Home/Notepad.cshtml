@@ -37,15 +37,17 @@
                         </div>
                         @*{{p.ID}}*@
                         <div ng-if="p.displayData.showSettings" class="settingsBox">
-                            <button ng-click="p.displayData.showSettings=false">Zamknij</button>
                             <table>
                                 <tr ng-repeat="(type, savedData) in p.Settings"> <!-- ng-if="typeof s === 'string'"-->
                                     <td>{{type}}, {{$index}}</td>
-                                    <td><input type="text" ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)"/></td>
+                                    <td ng-if="type!='view' && type!='script'"><input type="text" ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)"/></td>
+                                    <td ng-if="type=='view' || type=='script'"><suggestion-list ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)" /></td>
+                                    <td><span class="glyphicon glyphicon-remove" ng-click="deleteSetting($parent.$index, type)"></span></td>
                                 </tr>
                             </table>
                             <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting"/><span class="glyphicon glyphicon-plus" ng-click="p.Settings[addSetting+'']=''"></span></p>
-                            <p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>
+                            @*<p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>*@
+                            <button ng-click="p.displayData.showSettings=false">Zamknij</button>
                         </div>
                         <div ng-if="p.Settings['view'] != undefined">
                             <font size="1">{{p.Settings['view']}}</font><br />
@@ -61,8 +63,8 @@
 
             <button ng-if="noteType!='Code'&&noteType!='View'" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
 
-            {{currentNoteObject.NoteId}}
-            <a ng-show="!showNoteEditForm" ng-click="showNoteEditForm=true">Ustawienia notatki</a>
+            @*{{currentNoteObject.NoteId}}*@
+            <button ng-show="!showNoteEditForm" ng-click="showNoteEditForm=true" class="btn btn-warning">Ustawienia notatki</button>
             <div ng-show="showNoteEditForm" class="settingsBox">
                 <p>Nowe Tagi:</p>
                 <input type="text" ng-model="currentNoteObject.TagsToAdd" />

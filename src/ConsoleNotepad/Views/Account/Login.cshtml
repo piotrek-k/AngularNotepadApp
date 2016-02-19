@@ -7,6 +7,12 @@
 @{
     ViewData["Title"] = "Log in";
 }
+<style>
+    body {
+        background-image: url("../../images/winter.jpg");
+        color: white;
+    }
+</style>
 
 <div class="loginBoxContainer">
     <div class="loginBox">
@@ -16,12 +22,12 @@
             <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
 
             <div class="loginBoxPart">
-                <input asp-for="Email" class="" placeholder="Email"/>
+                <input asp-for="Email" class="" placeholder="Email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="loginBoxPart">
-                <input asp-for="Password" class="" placeholder="Hasło"/>
+                <input asp-for="Password" class="" placeholder="Hasło" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
