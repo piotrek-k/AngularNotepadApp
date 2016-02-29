@@ -103,7 +103,8 @@ namespace ConsoleNotepad.Controllers
                     _logger.LogInformation(1, "User logged in.");
                     //return RedirectToLocal(returnUrl);
                     DateTime? expires = DateTime.UtcNow.AddMinutes(60);
-                    var token = _tokenManager.TokenGenerator(model.Email, expires);
+                    var userId = _userManager.Users.Single(x => x.Email == model.Email).Id;
+                    var token = _tokenManager.TokenGenerator(userId, model.Email, expires);
                     //return new { authenticated = true, entityId = 1, token = token, tokenExpires = expires };
                     return Ok(new { authenticated = true, entityId = 1, token = token, tokenExpires = expires });
                 }

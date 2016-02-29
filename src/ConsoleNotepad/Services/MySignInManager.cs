@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace ConsoleNotepad.Services
 {
+    /// <summary>
+    /// Zmodyfikowana klasa SignInManager
+    /// </summary>
+    /// <typeparam name="T">ApplicationUser</typeparam>
     public class MySignInManager<T> : SignInManager<ApplicationUser>
     {
         public MySignInManager(UserManager<ApplicationUser> userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<ApplicationUser>> logger) : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger)

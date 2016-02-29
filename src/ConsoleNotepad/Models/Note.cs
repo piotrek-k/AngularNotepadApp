@@ -20,6 +20,8 @@ namespace ConsoleNotepad.Models
         public virtual ICollection<Part> Parts { get; set; }
         public DateTime? CreationDate { get; set; }
 
+        public string AuthorId { get; set; }
+
         [NotMapped]
         public Tag.SpecialTypes TypeOfNote
         {

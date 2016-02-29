@@ -7,6 +7,7 @@ using ConsoleNotepad.Models;
 using Microsoft.Data.Entity;
 using ConsoleNotepad.OtherClasses;
 using Microsoft.AspNet.Authorization;
+using System.Security.Claims;
 
 namespace ConsoleNotepad.Controllers
 {
@@ -30,8 +31,9 @@ namespace ConsoleNotepad.Controllers
         [Authorize]
         public IActionResult Notepad()
         {
-            var a = db.Notes.Include(x => x.NoteTags).ToList();
-            ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.Identity.Name, DateTime.UtcNow.AddMinutes(60));
+            //var a = db.Notes.Include(x => x.NoteTags).ToList();
+            var a = User.GetUserId();
+            ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.GetUserId(), User.Identity.Name, DateTime.UtcNow.AddMinutes(60));
             return View();
         }
 
