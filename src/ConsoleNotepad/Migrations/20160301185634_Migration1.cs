@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
 using Microsoft.Data.Entity.Metadata;
 
-namespace ConsoleNotepad.Migrations.DataDb
+namespace ConsoleNotepad.Migrations
 {
-    public partial class nextMg : Migration
+    public partial class Migration1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,7 @@ namespace ConsoleNotepad.Migrations.DataDb
                 {
                     NoteId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AuthorId = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
@@ -41,7 +42,10 @@ namespace ConsoleNotepad.Migrations.DataDb
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationDate = table.Column<DateTime>(nullable: true),
                     Data = table.Column<string>(nullable: true),
+                    LastTimeModified = table.Column<DateTime>(nullable: true),
                     NoteID = table.Column<int>(nullable: false),
+                    OrderPosition = table.Column<int>(nullable: false),
+                    SettingsAsJSON = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -77,13 +81,37 @@ namespace ConsoleNotepad.Migrations.DataDb
                         principalColumn: "TagId",
                         onDelete: ReferentialAction.Cascade);
                 });
+            migrationBuilder.CreateTable(
+                name: "PartBackup",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Data = table.Column<string>(nullable: true),
+                    DateOfMakingBackup = table.Column<DateTime>(nullable: true),
+                    OrderPosition = table.Column<int>(nullable: false),
+                    OriginalPartID = table.Column<int>(nullable: false),
+                    SettingsAsJSON = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PartBackup", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_PartBackup_Part_OriginalPartID",
+                        column: x => x.OriginalPartID,
+                        principalTable: "Part",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable("NoteTag");
-            migrationBuilder.DropTable("Part");
+            migrationBuilder.DropTable("PartBackup");
             migrationBuilder.DropTable("Tag");
+            migrationBuilder.DropTable("Part");
             migrationBuilder.DropTable("Note");
         }
     }

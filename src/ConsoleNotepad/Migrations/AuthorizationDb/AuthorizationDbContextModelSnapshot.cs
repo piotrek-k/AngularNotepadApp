@@ -5,13 +5,12 @@ using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
 using ConsoleNotepad.Models;
 
-namespace ConsoleNotepad.Migrations
+namespace ConsoleNotepad.Migrations.AuthorizationDb
 {
     [DbContext(typeof(AuthorizationDbContext))]
-    [Migration("20151230095800_FirstMigration")]
-    partial class FirstMigration
+    partial class AuthorizationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -22,6 +21,8 @@ namespace ConsoleNotepad.Migrations
                     b.Property<string>("Id");
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<bool>("AdminConfirmed");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();

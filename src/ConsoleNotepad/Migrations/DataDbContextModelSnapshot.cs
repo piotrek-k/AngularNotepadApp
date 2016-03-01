@@ -5,13 +5,12 @@ using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
 using ConsoleNotepad.Models;
 
-namespace ConsoleNotepad.Migrations.DataDb
+namespace ConsoleNotepad.Migrations
 {
     [DbContext(typeof(DataDbContext))]
-    [Migration("20160206103728_MoveSpecialsToTag")]
-    partial class MoveSpecialsToTag
+    partial class DataDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -21,6 +20,8 @@ namespace ConsoleNotepad.Migrations.DataDb
                 {
                     b.Property<int>("NoteId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorId");
 
                     b.Property<DateTime?>("CreationDate");
 
@@ -45,9 +46,31 @@ namespace ConsoleNotepad.Migrations.DataDb
 
                     b.Property<string>("Data");
 
+                    b.Property<DateTime?>("LastTimeModified");
+
                     b.Property<int>("NoteID");
 
                     b.Property<int>("OrderPosition");
+
+                    b.Property<string>("SettingsAsJSON");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("ID");
+                });
+
+            modelBuilder.Entity("ConsoleNotepad.Models.PartBackup", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Data");
+
+                    b.Property<DateTime?>("DateOfMakingBackup");
+
+                    b.Property<int>("OrderPosition");
+
+                    b.Property<int>("OriginalPartID");
 
                     b.Property<string>("SettingsAsJSON");
 
@@ -62,8 +85,6 @@ namespace ConsoleNotepad.Migrations.DataDb
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
-
-                    b.Property<int>("Type");
 
                     b.HasKey("TagId");
                 });
@@ -84,6 +105,13 @@ namespace ConsoleNotepad.Migrations.DataDb
                     b.HasOne("ConsoleNotepad.Models.Note")
                         .WithMany()
                         .HasForeignKey("NoteID");
+                });
+
+            modelBuilder.Entity("ConsoleNotepad.Models.PartBackup", b =>
+                {
+                    b.HasOne("ConsoleNotepad.Models.Part")
+                        .WithMany()
+                        .HasForeignKey("OriginalPartID");
                 });
         }
     }

@@ -5,11 +5,11 @@ using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
 using ConsoleNotepad.Models;
 
-namespace ConsoleNotepad.Migrations.DataDb
+namespace ConsoleNotepad.Migrations
 {
     [DbContext(typeof(DataDbContext))]
-    [Migration("20160301184156_PartBackup")]
-    partial class PartBackup
+    [Migration("20160301185634_Migration1")]
+    partial class Migration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
