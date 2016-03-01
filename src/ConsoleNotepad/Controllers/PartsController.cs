@@ -77,6 +77,11 @@ namespace ConsoleNotepad.Controllers
 
             _context.Entry(part).State = EntityState.Modified;
 
+            if (_context.Entry(part).Entity.LastTimeModified < DateTime.Now.AddHours(-4)) //jeœli poprzednia modyfikacja by³a ju¿ dawno, zrób kopiê
+            {
+                _context.Add(new PartBackup(_context.Entry(part).Entity));
+            }
+
             try
             {
                 _context.SaveChanges();

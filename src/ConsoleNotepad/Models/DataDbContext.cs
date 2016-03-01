@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Entity;
+﻿using ConsoleNotepad.OtherClasses;
+using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,22 @@ namespace ConsoleNotepad.Models
                 .HasForeignKey(pt => pt.TagId);
             //base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<NoteTag>().HasKey(x => new { x.NoteId, x.TagId });
+        }
+
+        public override int SaveChanges()
+        {
+            /*
+             * Aktualizowanie wszystkich zmiennych LastTimeModified
+             */
+            var changeSet = ChangeTracker.Entries<IContainsLastModified>();
+            if(changeSet != null)
+            {
+                foreach (var entry in changeSet.Where(c => c.State != EntityState.Unchanged))
+                {
+                    entry.Entity.LastTimeModified = DateTime.Now;
+                }
+            }
+            return base.SaveChanges();
         }
 
         public DataDbContext()

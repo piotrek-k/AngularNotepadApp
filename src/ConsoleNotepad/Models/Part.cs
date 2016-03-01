@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleNotepad.OtherClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace ConsoleNotepad.Models
 {
-    public class Part
+    public class Part : IContainsLastModified
     {
         public Part()
         {
             CreationDate = DateTime.Now;
+            LastTimeModified = DateTime.Now;
+            PartHistory = new HashSet<PartBackup>();
         }
 
         public int ID { get; set; }
@@ -21,8 +24,12 @@ namespace ConsoleNotepad.Models
 
         public int OrderPosition { get; set; }
 
+        public DateTime? LastTimeModified { get; set; }
+
         [ForeignKey("Note")]
         public int NoteID { get; set; }
         public virtual Note Note { get; set; }
+
+        public virtual ICollection<PartBackup> PartHistory { get; set; }
     }
 }

@@ -8,9 +8,10 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations.DataDb
 {
     [DbContext(typeof(DataDbContext))]
-    partial class DataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160301184156_PartBackup")]
+    partial class PartBackup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
