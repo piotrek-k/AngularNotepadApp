@@ -411,6 +411,11 @@ namespace ConsoleNotepad.Controllers
         public bool AllowAccess(string id)
         {
             var realId = User.GetUserId();
+            if(realId == null)
+            {
+                Trace.Write("");
+            }
+
             return id == User.GetUserId();
         }
 

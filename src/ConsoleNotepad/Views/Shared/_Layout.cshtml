@@ -86,6 +86,7 @@
                 $http.defaults.headers.common.Authorization = 'Bearer @ViewData["AuthToken"]';
             });
         </script>
+        @*<p>'Bearer @ViewData["AuthToken"]'</p>*@
     }
 
     @RenderSection("scripts", required: false)
