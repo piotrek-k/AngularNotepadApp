@@ -50,21 +50,21 @@ gulp.task("min:css", function () {
 
 gulp.task("min", ["min:js", "min:css"]);
 
-gulp.task("copy:angularviews", function () {
-    return gulp.src(['./AngularPart/**/**/*.html'])
-        .pipe(gulp.dest(paths.angularViewsDest));
-});
+//gulp.task("copy:angularviews", function () {
+//    return gulp.src(['./AngularPart/**/**/*.html'])
+//        .pipe(gulp.dest(paths.angularViewsDest));
+//});
 
-gulp.task("copy:js", function () {
-    return gulp.src([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js'], { base: "." })
-        .pipe(concat(paths.concatJsDestUnminified))
-        .pipe(gulp.dest("."));
-});
+//gulp.task("copy:js", function () {
+//    return gulp.src([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js'], { base: "." })
+//        .pipe(concat(paths.concatJsDestUnminified))
+//        .pipe(gulp.dest("."));
+//});
 
-gulp.task("copy", ["copy:js", "copy:angularviews"]);
+//gulp.task("copy", ["copy:js", "copy:angularviews"]);
 
-gulp.task('copyAfterEachChange', function () {
-    gulp.watch([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js', './AngularPart/**/**/*.html'], ['copy']);
-});
+//gulp.task('copyAfterEachChange', function () {
+//    gulp.watch([paths.js, "!" + paths.minJs, './AngularPart/*.js', './AngularPart/**/**/*.js', './AngularPart/**/**/*.html'], ['copy']);
+//});
 
 gulp.task("all", ["clean", "min", "copy"]);

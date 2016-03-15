@@ -52,12 +52,24 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/angular/angular.js"></script>
         <script src="~/lib/angular-route/angular-route.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @*<script src="~/angularpart/app.module.js"></script>
-            <script src="~/angularpart/shared/contenteditable.js"></script>
-            <script src="~/angularpart/components/noteseditor/editorcontroller.js"></script>
-            <script src="~/angularpart/components/noteseditor/editorservice.js"></script>*@
+        @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
+        <script src="~/angularpart/app.module.js"></script>
+        <script src="~/angularpart/app.routes.js"></script>
+
+        <script src="~/angularpart/components/noteseditor/editorcontroller.js"></script>
+        <script src="~/angularpart/components/noteseditor/windowscontroller.js"></script>
+
+        <script src="~/angularpart/components/noteseditor/notesservice.js"></script>
+        <script src="~/angularpart/components/noteseditor/partsservice.js"></script>
+
+        <script src="~/angularpart/directives/aceeditor.js"></script>
+        <script src="~/angularpart/directives/appendscript.js"></script>
+        <script src="~/angularpart/directives/contenteditable.js"></script>
+        <script src="~/angularpart/directives/focuson.js"></script>
+        <script src="~/angularpart/directives/keyboardshortcutsmanager.js"></script>
+        <script src="~/angularpart/directives/viewloader.js"></script>
+        <script src="~/angularpart/directives/suggestionlist.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
