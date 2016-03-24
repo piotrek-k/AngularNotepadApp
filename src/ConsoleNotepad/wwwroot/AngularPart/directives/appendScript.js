@@ -1,8 +1,11 @@
-﻿app.directive('appendScript', function (notes, parts) {
+﻿//<append-script note-name="!code upload file"></append-script>
+//uzytkownik otrzymuje wszystkie zmienne z viewLoadera (evalFromParent)
+
+app.directive('appendScript', function (notes, parts) {
     return {
         restrict: 'AE',
         scope: {
-            noteName: '=',
+            noteName: '@noteName',
             //evalFromParent: '='
         },
         link: function (scope, elem, attrs) {

@@ -1,4 +1,4 @@
-﻿app.directive('viewLoader', function (notes, parts, $compile) {
+﻿app.directive('viewLoader', function (notes, parts, $compile, fileUpload) {
     return {
         restrict: 'AE',
         require: 'ngModel',
