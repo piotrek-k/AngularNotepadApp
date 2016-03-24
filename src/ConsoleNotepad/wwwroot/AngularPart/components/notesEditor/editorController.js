@@ -91,7 +91,7 @@
 
         $scope.parts[atIndex].localState = "Sending";
         $scope.parts[atIndex].OrderPosition = $scope.parts[atIndex - 1].OrderPosition + 1;
-
+        
         //to samo dzieje sie na serwerze
         for (var a in $scope.parts) {
             if (a != atIndex && $scope.parts[a].OrderPosition >= $scope.parts[atIndex].OrderPosition) {
@@ -102,6 +102,10 @@
         parts.post($scope.parts[atIndex]).success(function (data) {
             $scope.parts[atIndex].ID = data.ID;
             $scope.parts[atIndex].localState = "OK";
+            //console.dir($scope.parts);
+            $scope.parts[atIndex].displayData = {};
+            $scope.parts[atIndex].displayData.quickViewSetter = true;
+            $scope.parts[atIndex].Settings = {};
         }).error(function () {
             $scope.parts[atIndex].localState = "Problem";
         });
@@ -128,6 +132,8 @@
                 //data[p].Settings["test"] = "aaaaa";
                 //data[p].Settings["test22"] = "bb";
             }
+
+            data[p].displayData = {};
             //data[p].Settings = new Array();
             //data[p].Settings.push(["view", "!view some tag"]);
             //data[p].Settings.push(["test", "!view some tag"]);
@@ -197,5 +203,23 @@
         //console.log("pi: " + partIndex + " sn: " + settingName);
         //console.dir($scope.parts);
         delete $scope.parts[partIndex].Settings[settingName];
+        $scope.editingPartKeyDown(null, $scope.activePart);
+    }
+
+    $scope.getViews = function () {
+        //szybki wybór widoków do nowej części notatki
+        //$scope.quickViewsContainer
+        notes.getPopularViews().then(function (response) {
+            if($scope.quickViewsContainer == [] || $scope.quickViewsContainer == null){
+                $scope.quickViewsContainer = response.data;
+            }
+        });
+    }
+
+    $scope.setViewToPart = function (partIndex, viewTagi) {
+        $scope.parts[partIndex].Settings["view"] = viewTagi + "";
+        $scope.parts[partIndex].displayData.quickViewSetter = false;
+        //console.dir($scope.parts[partIndex]);
+        $scope.editingPartKeyDown(null, $scope.activePart);
     }
 });

@@ -201,6 +201,16 @@ namespace ConsoleNotepad.Controllers
             }));
         }
 
+        [HttpGet("/api/notes/popularviews", Name ="GetPopularViews")]
+        public IActionResult GetPopularViews()
+        {
+            var views = db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).ThenInclude(x => x.Tag).Where(z=>z.TypeOfNote==Tag.SpecialTypes.View).Take(20);
+            return Ok(JsonConvert.SerializeObject(views, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
+
         // GET: api/Notes/5
         [HttpGet("{id}", Name = "GetNote")]
         public IActionResult GetNote([FromRoute] int id)

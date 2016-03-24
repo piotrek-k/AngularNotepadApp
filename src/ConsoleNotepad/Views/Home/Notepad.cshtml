@@ -49,8 +49,14 @@
                             @*<p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>*@
                             <button ng-click="p.displayData.showSettings=false">Zamknij</button>
                         </div>
+                        <div ng-if="p.displayData.quickViewSetter" class="settingsBox" ng-init="getViews()">
+                            <div ng-click="p.displayData.quickViewSetter=false">Pusta notatka (brak view)</div>
+                            <div ng-repeat="v in quickViewsContainer" ng-click="setViewToPart($parent.$index, v.TagsAsSingleString)">
+                                {{v.TagsAsSingleString}}
+                            </div>
+                        </div>
                         <div ng-if="p.Settings['view'] != undefined">
-                            <font size="1">{{p.Settings['view']}}</font><br />
+                            <font size="1" ng-click="focusedOnPart($index)">{{p.Settings['view']}}</font><br />
                             <view-loader ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
                         </div>
                         <div ng-if="p.Settings['view'] == undefined">

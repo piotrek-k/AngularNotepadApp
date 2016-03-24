@@ -18,8 +18,12 @@
                 scope.viewAdress = scope.settings["view"] != undefined ? scope.settings["view"] : "";
                 scope.scriptAdress = scope.settings["script"] != undefined ? scope.settings["script"] : "";
 
-                reloadView(scope.viewAdress);
-                loadScript(scope.scriptAdress);
+                if (scope.viewAdress != "") {
+                    reloadView(scope.viewAdress);
+                }
+                if (scope.scriptAdress != "") {
+                    loadScript(scope.scriptAdress);
+                }
             }
 
             function reloadView(adress) {
@@ -37,14 +41,14 @@
                             if (data.length == 1) {
                                 var html = data[0].Data;
                                 elem.html(html);
-                                $compile(elem.contents())(scope);
+                                $compile(elem.contents()) (scope);
                             }
                             else {
-                                console.error("Nieprawidlowa ilosc partow: " + data.length);
-                            }
-                        });
+                                console.error("Nieprawidlowa ilosc partow: " +data.length);
+                        }
                     });
-                }
+                });
+            }
             }
 
             function loadScript(adress) {
@@ -56,10 +60,10 @@
                             eval(data[0].Data);
                         }
                         else {
-                            console.error("Nieprawidlowa ilosc partow: " + data.length);
-                        }
-                    });
+                            console.error("Nieprawidlowa ilosc partow: " +data.length);
+                    }
                 });
+            });
             }
 
             scope.evalFromParent = function (data) {
@@ -68,16 +72,16 @@
                 eval(data);
             }
 
-            //attrs.$observe('partSettings', function (newval) {
-            //    console.log("newval");
-            //    //console.table(newval);
+                //attrs.$observe('partSettings', function (newval) {
+                //    console.log("newval");
+                //    //console.table(newval);
 
-            //    if (scope.oldSettings["view"] != newval["view"]) {
-            //        reloadView(newval["view"]);
-            //    }
-            //    else {
-            //        console.log("brak zmian");
-            //    }
+                //    if (scope.oldSettings["view"] != newval["view"]) {
+                //        reloadView(newval["view"]);
+                //    }
+                //    else {
+                //        console.log("brak zmian");
+                //    }
             //});
         }
     };

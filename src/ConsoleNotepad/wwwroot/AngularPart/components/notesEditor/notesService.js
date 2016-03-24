@@ -62,6 +62,26 @@
         });
     }
 
+    //pobierz najczesciej uzywane views
+    notes.getPopularViews = function () {
+        //console.log("getByTag: " + searchText);
+        return $http({
+            method: 'GET',
+            url: '/api/notes/popularviews',
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(function (response) {
+            //success
+            return response;
+        }, function (response) {
+            //error
+            console.error("Error while using notes.getPopularViews");
+            console.dir(response);
+            throw response;
+        });
+    }
+
     notes.post = function (data) {
         return $http({
             method: 'POST',
