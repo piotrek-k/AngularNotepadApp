@@ -7,12 +7,14 @@ using System.IO;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Net.Http.Headers;
+using Microsoft.AspNet.Authorization;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ConsoleNotepad.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize("Bearer")]
     public class FileUploadController : Controller
     {
         private IHostingEnvironment _environment;
