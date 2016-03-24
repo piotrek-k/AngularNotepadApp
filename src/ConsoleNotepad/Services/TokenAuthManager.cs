@@ -33,10 +33,11 @@ namespace ConsoleNotepad.OtherClasses
             // Here, you should create or look up an identity for the user which is being authenticated.
             // For now, just creating a simple generic identity.
             ClaimsIdentity identity = new ClaimsIdentity(
-                new GenericIdentity(user, "TokenAuth"),
+                new GenericIdentity(user), //, "TokenAuth"
                 new[] {
-                    new Claim("EntityID", "1", ClaimValueTypes.Integer),
-                    new Claim(ClaimTypes.NameIdentifier, userId)
+                    //new Claim("EntityID", "1", ClaimValueTypes.Integer),
+                    new Claim(ClaimTypes.NameIdentifier, userId),
+                    new Claim(ClaimTypes.Name, user)
                 });
             //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId));
 

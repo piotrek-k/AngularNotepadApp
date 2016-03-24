@@ -63,7 +63,7 @@ namespace ConsoleNotepad.Controllers
             * var allNotes = db.Notes.Where(dbnote => tags.All(givenTag => dbnote.NoteTags.Any(dbNoteTag => dbNoteTag.Tag.Name == givenTag))).Include(x => x.NoteTags).ThenInclude(x => x.Tag);
             * Niestety ìSequence contains more than one elementî cokolwiek to kurwa znaczy
             */
-            var allNotes = db.Notes.Where(x => AllowAccess(x.AuthorId)).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
+            var allNotes = db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList();
             List<Note> finalNotes = new List<Note>();
             foreach (var note in allNotes)
             {
@@ -131,9 +131,9 @@ namespace ConsoleNotepad.Controllers
             * Niestety ìSequence contains more than one elementî cokolwiek to kurwa znaczy
             * EDIT: 5/2/2016: podejrzewam øe problemem jest to, øe NoteTags jest po prostu pusty. Jakby daÊ ToList() to moøe bÍdzie dzia≥aÊ, chociaø to pewnie nie jest dobry pomys≥ trzymaÊ to wszystko w pamiÍci...
             */
+            var userid = User.GetUserId();
 
-
-            var allNotes = db.Notes.Where(x => AllowAccess(x.AuthorId)).Include(x => x.NoteTags).ThenInclude(x => x.Tag).Where(x => x.NoteTags.Count == tags.Count).ToList();
+            var allNotes = db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).ThenInclude(x => x.Tag).Where(x => x.NoteTags.Count == tags.Count).ToList();
             List<Note> finalNotes = new List<Note>();
             foreach (var note in allNotes)
             {
@@ -217,7 +217,7 @@ namespace ConsoleNotepad.Controllers
                 return HttpNotFound();
             }
 
-            if (AllowAccess(note.AuthorId))
+            if (AllowAccess(note.AuthorId, User.GetUserId()))
             {
                 return HttpUnauthorized();
             }
@@ -247,13 +247,13 @@ namespace ConsoleNotepad.Controllers
                 if (note.TagsToAdd != "" && note.TagsToAdd != null && note.TagsToAdd != note.TagsAsSingleString)
                 {
                     List<string> newTags = note.TagsToAdd.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    if (db.Notes.Where(x => AllowAccess(x.AuthorId)).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, newTags) && x.NoteId != note.NoteId))
+                    if (db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, newTags) && x.NoteId != note.NoteId))
                     {
                         return HttpBadRequest("Notatka o tych tagach juø istnieje");
                     }
                     else
                     {
-                        var dbNote = db.Notes.Where(x => AllowAccess(x.AuthorId)).Include(x => x.NoteTags).FirstOrDefault(x => x.NoteId == note.NoteId);
+                        var dbNote = db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).FirstOrDefault(x => x.NoteId == note.NoteId);
                         if (dbNote == null)
                         {
                             return HttpBadRequest("Edytowana notatka nie istnieje");
@@ -302,12 +302,12 @@ namespace ConsoleNotepad.Controllers
 
             note = TagsToAddToTags(note);
 
-            if (db.Notes.Where(x => AllowAccess(x.AuthorId)).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, note.ArrayWithTagsNames)))
+            if (db.Notes.Where(x => AllowAccess(x.AuthorId, User.GetUserId())).Include(x => x.NoteTags).ThenInclude(x => x.Tag).ToList().Any(x => Functions.CheckIfListsAreEqual(x.ArrayWithTagsNames, note.ArrayWithTagsNames)))
             {
                 return new HttpStatusCodeResult(StatusCodes.Status409Conflict);
             }
 
-            note.AuthorId = HttpContext.User.GetUserId();
+            note.AuthorId = User.GetUserId();
 
             db.Notes.Add(note);
 
@@ -377,7 +377,7 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            Note note = db.Notes.Single(m => m.NoteId == id && AllowAccess(m.AuthorId));
+            Note note = db.Notes.Single(m => m.NoteId == id && AllowAccess(m.AuthorId, User.GetUserId()));
             if (note == null)
             {
                 return HttpNotFound();
@@ -406,17 +406,26 @@ namespace ConsoleNotepad.Controllers
         /// <summary>
         /// Sprawdü czy uøytkownik ma uprawnienia do obiektu
         /// </summary>
-        /// <param name="id">Id w≥aúciciela obiektu</param>
+        /// <param name="dbID">Id w≥aúciciela obiektu</param>
         /// <returns></returns>
-        public bool AllowAccess(string id)
+        public bool AllowAccess(string dbID, string userIdFromController)
         {
-            var realId = User.GetUserId();
-            if(realId == null)
+            var userId = User.GetUserId();
+
+            if(userId == null && userIdFromController != null)
             {
-                Trace.Write("");
+                Trace.Write("-----------null realId " + DateTime.Now);
+            }
+            else if (userId == null && userIdFromController == null)
+            {
+                Trace.Write("-----------null realId " + DateTime.Now);
+            }
+            else
+            {
+                Trace.Write("-----------OK realId " + DateTime.Now);
             }
 
-            return id == User.GetUserId();
+            return dbID == userIdFromController;
         }
 
 

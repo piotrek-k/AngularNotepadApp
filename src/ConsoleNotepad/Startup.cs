@@ -20,13 +20,14 @@ using Microsoft.AspNet.Authentication.JwtBearer;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Http;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace ConsoleNotepad
 {
     public class Startup
     {
-        const string TokenAudience = "ExampleAudience";
-        const string TokenIssuer = "ExampleIssuer";
+        const string TokenAudience = "AppUser";
+        const string TokenIssuer = "ConsoleNotepad";
         private RsaSecurityKey key;
         private TokenAuthManager tokenOptions;
 
@@ -105,7 +106,7 @@ namespace ConsoleNotepad
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-                    .RequireAuthenticatedUser().Build());
+                    .RequireAuthenticatedUser().RequireClaim(ClaimTypes.NameIdentifier).Build());
             });
 
             //Koniec Token-based authentication
@@ -145,6 +146,16 @@ namespace ConsoleNotepad
                 }
                 catch { }
             }
+
+
+            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
+
+            app.UseStaticFiles();
+
+            app.UseIdentity();
+
+            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
+
 
             /*
             * Źródło: https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample
@@ -206,14 +217,6 @@ namespace ConsoleNotepad
                 options.TokenValidationParameters.ClockSkew = TimeSpan.FromMinutes(0);
             });
             //koniec kodu z tokenami
-
-            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
-
-            app.UseStaticFiles();
-
-            app.UseIdentity();
-
-            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {

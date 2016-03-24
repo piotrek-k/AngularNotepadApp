@@ -33,7 +33,7 @@ namespace ConsoleNotepad.Controllers
         {
             //var a = db.Notes.Include(x => x.NoteTags).ToList();
             var a = User.GetUserId();
-            ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.GetUserId(), User.Identity.Name, DateTime.UtcNow.AddMinutes(60));
+            ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.GetUserId(), User.Identity.Name, DateTime.Now.AddMinutes(60));
             return View();
         }
 
