@@ -24,6 +24,7 @@
 /// <reference path="angularpart/directives/appendScript.js" />
 /// <reference path="angularpart/directives/contenteditable.js" />
 /// <reference path="angularpart/directives/focusOn.js" />
+/// <reference path="angularpart/directives/goto.js" />
 /// <reference path="angularpart/directives/keyboardShortcutsManager.js" />
 /// <reference path="angularpart/directives/suggestionList.js" />
 /// <reference path="angularpart/directives/viewLoader.js" />

@@ -3,7 +3,7 @@
 *@
 @{
 }
-<div ng-controller="windowsController" class="table" keyboard-shortcuts-manager>
+<div ng-controller="windowsController" id="windowsContainer" class="table" keyboard-shortcuts-manager>
     <div class="tr">
         <div ng-controller="editorController" ng-init="setWindowID($index)" class="notePadWindow td" ng-class="{windowBorderRight: $index < arr.length-1}" ng-repeat="x in numberOfWindows">
 

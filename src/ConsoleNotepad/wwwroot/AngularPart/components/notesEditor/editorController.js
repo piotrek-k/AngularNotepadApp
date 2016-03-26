@@ -16,6 +16,14 @@
         $scope.windowId = index;
     }
 
+    $scope.$on('remotely-modify-window', function (e, args) {
+        //uzywane przez windowsController
+        if(args.i == $scope.$index){
+            $scope.smartBar = args.noteName;
+            getPartsByTag();
+        }
+    });
+
     //aktualizacja części notatki. Czeka kilka sekund zanim wyśle aktualizację.
     $scope.editingPartKeyDown = function (event, partObjIndex) {
 
@@ -93,7 +101,7 @@
 
         $scope.parts[atIndex].localState = "Sending";
         $scope.parts[atIndex].OrderPosition = $scope.parts[atIndex - 1].OrderPosition + 1;
-        
+
         //to samo dzieje sie na serwerze. Przydzielanie wszystkim partom pozycji
         for (var a in $scope.parts) {
             if (a != atIndex && $scope.parts[a].OrderPosition >= $scope.parts[atIndex].OrderPosition) {
@@ -156,7 +164,7 @@
     $scope.getViews = function () {
         //szybki wybór widoków do nowej części notatki
         notes.getPopularViews().then(function (response) {
-            if($scope.quickViewsContainer == [] || $scope.quickViewsContainer == null){
+            if ($scope.quickViewsContainer == [] || $scope.quickViewsContainer == null) {
                 $scope.quickViewsContainer = response.data;
             }
         });
