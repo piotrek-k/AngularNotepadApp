@@ -47,12 +47,37 @@
         </footer>
     </div>
 
-    <environment names="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/angular/angular.js"></script>
+    <script src="~/lib/angular-route/angular-route.js"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+
+    <script src="~/angularpart/app.module.js"></script>
+    <script src="~/angularpart/app.routes.js"></script>
+
+    <script src="~/angularpart/components/noteseditor/editorcontroller.js"></script>
+    <script src="~/angularpart/components/noteseditor/windowscontroller.js"></script>
+
+    <script src="~/angularpart/components/noteseditor/notesservice.js"></script>
+    <script src="~/angularpart/components/noteseditor/partsservice.js"></script>
+    <script src="~/angularpart/components/noteseditor/fileuploadservice.js"></script>
+
+    <script src="~/angularpart/directives/aceeditor.js"></script>
+    <script src="~/angularpart/directives/appendscript.js"></script>
+    <script src="~/angularpart/directives/contenteditable.js"></script>
+    <script src="~/angularpart/directives/focuson.js"></script>
+    <script src="~/angularpart/directives/keyboardshortcutsmanager.js"></script>
+    <script src="~/angularpart/directives/viewloader.js"></script>
+    <script src="~/angularpart/directives/suggestionlist.js"></script>
+
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+    @*<environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/angular/angular.js"></script>
         <script src="~/lib/angular-route/angular-route.js"></script>
-        @*<script src="~/js/site.js" asp-append-version="true"></script>*@
+        
 
         <script src="~/angularpart/app.module.js"></script>
         <script src="~/angularpart/app.routes.js"></script>
@@ -90,7 +115,7 @@
                 asp-fallback-test="window.angular">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    </environment>*@
 
     @if (ViewData["AuthToken"] != null)
     {

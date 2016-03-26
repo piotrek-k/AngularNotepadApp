@@ -6,59 +6,64 @@
 <div ng-controller="windowsController" class="table" keyboard-shortcuts-manager>
     <div class="tr">
         <div ng-controller="editorController" ng-init="setWindowID($index)" class="notePadWindow td" ng-class="{windowBorderRight: $index < arr.length-1}" ng-repeat="x in numberOfWindows">
-            <!--windowId zawiera index okna-->
-            @*<div class="wrapper">
-                <input id="smartBar{{windowId}}" class="smartBar" ng-focus="showSuggestions=true" ng-blur="showSuggestions=false" ng-model="smartBar" ng-keydown="smartBarKeyDown($event)" focus-on="smartBar{{windowId}}" />
-                <table class="suggestionList" ng-show="showSuggestions">
-                    <tr ng-repeat="sg in suggestions" ng-class="{highlighedSuggestion: $index == highlightedSuggestion}" ng-mousedown="suggestionClicked($index, $event)">
-                        <td ng-repeat="nt in sg.NoteTags" style="padding: 0rem 1rem">
-                            {{nt.Tag.Name}}
-                        </td>
-                    </tr>
-                </table>
-            </div>*@
+
+            <!--windowId zawiera index renderowanego okna-->
             <suggestion-list ng-model="smartBar" input-id="smartBar{{windowId}}" input-class="smartBar" callback="suggestionListCallback"></suggestion-list>
-            @*{{currentNoteId}}*@
-            @*<append-script note-name="'!code scripts test'"></append-script>*@
+
             <div id="noteParts">
+
+                <!--Komunikat gdy szukana notatka nie istnieje-->
                 <div ng-show="askToAddNewNote != undefined" class="settingsBox">
                     Notatka '{{askToAddNewNote}}' nie istnieje.<br />
                     <button ng-click="addNote(askToAddNewNote)">Dodaj</button>
                     <button ng-click="askToAddNewNote=undefined">Ignoruj</button>
                 </div>
+
+                <!--Wyświetlanie wszystkich notatek-->
                 <div class="notePart" ng-repeat="p in parts">
                     <div class="notePartEditableWithDecorations">
+
                         <div class="partDecoration"> > </div>
+
+                        <!--Ikonki po prawej-->
                         <div class="partDecorationRight">
                             <div ng-if="p.localState=='OK'"><span class="glyphicon glyphicon-ok" aria-hidden="true" /></div>
                             <div ng-if="p.localState=='Sending'"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></div>
                             <div ng-if="p.localState=='Problem'"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
                             <div ng-if="$index == activePart"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true"></span></div>
                         </div>
-                        @*{{p.ID}}*@
+
+                        <!--Ustawienia części notatki-->
                         <div ng-if="p.displayData.showSettings" class="settingsBox">
                             <table>
-                                <tr ng-repeat="(type, savedData) in p.Settings"> <!-- ng-if="typeof s === 'string'"-->
-                                    <td>{{type}}, {{$index}}</td>
-                                    <td ng-if="type!='view' && type!='script'"><input type="text" ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)"/></td>
+                                <tr ng-repeat="(type, savedData) in p.Settings">
+                                    <td>{{type}}</td>
+                                    <!--Podpowiadaj nazwę, jeśli typem ustawienia jest view lub script-->
+                                    <td ng-if="type!='view' && type!='script'"><input type="text" ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)" /></td>
                                     <td ng-if="type=='view' || type=='script'"><suggestion-list ng-model="p.Settings[type+'']" ng-keydown="editingPartKeyDown($event, activePart)" /></td>
+                                    <!--Usuń-->
                                     <td><span class="glyphicon glyphicon-remove" ng-click="deleteSetting($parent.$index, type)"></span></td>
                                 </tr>
                             </table>
-                            <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting"/><span class="glyphicon glyphicon-plus" ng-click="p.Settings[addSetting+'']=''"></span></p>
-                            @*<p>Liczba wszystkich ustawień: {{p.Settings.length}}</p>*@
+                            <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting" /><span class="glyphicon glyphicon-plus" ng-click="p.Settings[addSetting+'']=''"></span></p>
                             <button ng-click="p.displayData.showSettings=false">Zamknij</button>
                         </div>
+
+                        <!--Szybkie ustawianie View (lista najczęściej używanych)-->
                         <div ng-if="p.displayData.quickViewSetter" class="settingsBox" ng-init="getViews()">
                             <div ng-click="p.displayData.quickViewSetter=false">Pusta notatka (brak view)</div>
                             <div ng-repeat="v in quickViewsContainer" ng-click="setViewToPart($parent.$index, v.TagsAsSingleString)">
                                 {{v.TagsAsSingleString}}
                             </div>
                         </div>
+
+                        <!--W przypadku ustalonego view-->
                         <div ng-if="p.Settings['view'] != undefined">
                             <font size="1" ng-click="focusedOnPart($index)">{{p.Settings['view']}}</font><br />
                             <view-loader ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
                         </div>
+
+                        <!--W przypadku braku zdefiniowanego View, wyświetl zwykły text box-->
                         <div ng-if="p.Settings['view'] == undefined">
                             <div ng-if="noteType=='Normal'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
                             <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
@@ -67,9 +72,10 @@
                 </div>
             </div>
 
+            <!--Dodaje nowy part-->
             <button ng-if="noteType!='Code'&&noteType!='View'" class="btn btn-success" ng-click="addPart()">Dodaj część notatki</button>
 
-            @*{{currentNoteObject.NoteId}}*@
+            <!--Edycja ustawień całej notatki-->
             <button ng-show="!showNoteEditForm" ng-click="showNoteEditForm=true" class="btn btn-warning">Ustawienia notatki</button>
             <div ng-show="showNoteEditForm" class="settingsBox">
                 <p>Nowe Tagi:</p>
@@ -78,15 +84,12 @@
                 <button ng-click="showNoteEditForm=false">Zamknij</button>
             </div>
 
+            <!--Ikonki dodawania/usuwania okna-->
             <div class="windowOptions">
                 <span class="glyphicon glyphicon-plus" ng-click="addWindow($index)"></span>
                 <span class="glyphicon glyphicon-remove" ng-click="removeWindow($index)"></span>
             </div>
-            @*<code>highlightedSuggestion {{highlightedSuggestion}}</code>
-                <code>sugg length {{suggestions.length}}</code>
-                <code>{{highlightedSuggestion < suggestions.length}}</code>
-                <code>noteId {{currentNoteId}}</code>
-                <code>{{parts}}</code>*@
+
         </div>
     </div>
 </div>

@@ -35,8 +35,8 @@
             return response;
         }, function (response) {
             //error
-            console.error("Error while using notes.getSuggested");
-            console.dir(response);
+            //console.error("Error while using notes.getSuggested");
+            //console.dir(response);
             throw response;
         });
     }
@@ -56,8 +56,8 @@
             return response;
         }, function (response) {
             //error
-            console.error("Error while using notes.getByTag");
-            console.dir(response);
+            //console.error("notes.getByTag: error: " + response);
+            //console.dir(response);
             throw response;
         });
     }
@@ -76,8 +76,8 @@
             return response;
         }, function (response) {
             //error
-            console.error("Error while using notes.getPopularViews");
-            console.dir(response);
+            //console.error("Error while using notes.getPopularViews");
+            //console.dir(response);
             throw response;
         });
     }
@@ -107,7 +107,7 @@
                 'Accept': 'application/json'
             }
         }).then(function (response) { return response; }, function (response) {
-            console.error("Couldn't put a note");
+            //console.error("Couldn't put a note");
             throw response;
         });
     }
