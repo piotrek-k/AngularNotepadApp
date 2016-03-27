@@ -46,7 +46,8 @@ namespace ConsoleNotepad.Models
         public DataDbContext()
         {
             //this.Configuration.LazyLoadingEnabled = false;
-            
+            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         public DbSet<Note> Notes { get; set; }

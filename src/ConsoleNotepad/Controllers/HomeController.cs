@@ -31,8 +31,6 @@ namespace ConsoleNotepad.Controllers
         [Authorize]
         public IActionResult Notepad()
         {
-            //var a = db.Notes.Include(x => x.NoteTags).ToList();
-            var a = User.GetUserId();
             ViewData["AuthToken"] = _tokenOptions.TokenGenerator(User.GetUserId(), User.Identity.Name, DateTime.Now.AddMinutes(60));
             return View();
         }

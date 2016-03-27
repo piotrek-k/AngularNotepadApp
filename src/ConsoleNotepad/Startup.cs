@@ -54,12 +54,21 @@ namespace ConsoleNotepad
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+#if DEBUG
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<AuthorizationDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:AuthConnectionString"]))
                 .AddDbContext<DataDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:DataConnectionString"]));
+#elif RELEASE
+            services.AddEntityFramework()
+                .AddSqlServer()
+                .AddDbContext<AuthorizationDbContext>(options =>
+                    options.UseSqlServer(Configuration["Data:AzureConnection:AuthConnectionString"]))
+                .AddDbContext<DataDbContext>(options =>
+                    options.UseSqlServer(Configuration["Data:AzureConnection:DataConnectionString"]));
+#endif
 
             services.AddIdentity<ApplicationUser, IdentityRole>(o =>
             {

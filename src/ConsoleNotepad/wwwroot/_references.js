@@ -28,7 +28,6 @@
 /// <reference path="angularpart/directives/keyboardShortcutsManager.js" />
 /// <reference path="angularpart/directives/suggestionList.js" />
 /// <reference path="angularpart/directives/viewLoader.js" />
-/// <reference path="js/site.js" />
 /// <reference path="js/site.min.js" />
 /// <reference path="lib/angular/angular.js" />
 /// <reference path="lib/angular-route/angular-route.js" />
