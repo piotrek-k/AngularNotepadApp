@@ -75,12 +75,15 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest();
             }
 
-            _context.Entry(part).State = EntityState.Modified;
-
-            if (_context.Entry(part).Entity.LastTimeModified < DateTime.Now.AddHours(-4)) //jeœli poprzednia modyfikacja by³a ju¿ dawno, zrób kopiê
+            DateTime? lastMod = _context.Parts.AsNoTracking().Where(x => x.ID == part.ID).FirstOrDefault().LastTimeModified;
+            DateTime comparationDate = DateTime.Now.AddHours(-4);
+            if (lastMod < comparationDate) //jeœli poprzednia modyfikacja by³a ju¿ dawno, zrób kopiê
             {
                 _context.Add(new PartBackup(_context.Entry(part).Entity));
             }
+
+            part.LastTimeModified = DateTime.Now;
+            _context.Entry(part).State = EntityState.Modified;
 
             try
             {
