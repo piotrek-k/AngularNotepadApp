@@ -1,4 +1,4 @@
-﻿app.directive('viewLoader', function (notes, parts, $compile, fileUpload) {
+﻿app.directive('viewLoader', function (notes, parts, $compile, fileUpload, $http) {
     return {
         restrict: 'AE',
         require: 'ngModel',
@@ -57,7 +57,7 @@
                     var currentNoteId = noteData.NoteId;
                     parts.get(currentNoteId).success(function (data) {
                         if (data.length == 1) {
-                            eval(data[0].Data);
+                            scope.evalFromParent(data[0].Data);
                         }
                         else {
                             console.error("Nieprawidlowa ilosc partow: " +data.length);
@@ -68,7 +68,7 @@
 
             scope.evalFromParent = function (data) {
                 //evaluate some scripts from this position
-                console.log("Evaluated from parent");
+                //console.log("Evaluated from parent");
                 eval(data);
             }
 

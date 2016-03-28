@@ -124,6 +124,7 @@
             app.run(function ($http) {
                 $http.defaults.headers.common.Authorization = 'Bearer @ViewData["AuthToken"]';
             });
+            var GLOBAL_TOKEN = 'Bearer @ViewData["AuthToken"]';
         </script>
         @*<p>'Bearer @ViewData["AuthToken"]'</p>*@
     }

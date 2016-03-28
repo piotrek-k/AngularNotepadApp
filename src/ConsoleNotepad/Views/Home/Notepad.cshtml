@@ -59,7 +59,13 @@
 
                         <!--W przypadku ustalonego view-->
                         <div ng-if="p.Settings['view'] != undefined">
-                            <font size="1" ng-click="focusedOnPart($index)">{{p.Settings['view']}}</font><br />
+                            @*<font size="1" ng-click="focusedOnPart($index)">{{p.Settings['view']}}</font><br />*@
+                            <font size="1" ng-click="focusedOnPart($index)">
+                                <goto note-name="{{p.Settings['view']}}"></goto>
+                            </font><br />
+                            <font size="1" ng-click="focusedOnPart($index)">
+                                <goto note-name="{{p.Settings['script']}}"></goto>
+                            </font>
                             <view-loader ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
                         </div>
 
@@ -67,6 +73,23 @@
                         <div ng-if="p.Settings['view'] == undefined">
                             <div ng-if="noteType=='Normal'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
                             <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
+                            <div ng-if="noteType=='Code'">
+                                <p>GLOBAL_TOKEN - zmienna globalna gdzie przechowywany jest token</p>
+                                <p></p>
+                            </div>
+                            <div ng-if="noteType=='View'" style="margin: 1rem">
+                                <p>
+                                    <code>&lt;append-script note-name=&quot;!code upload file&quot;&gt;&lt;/append-script&gt;</code>
+                                    do wczytywania skryptów. Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader), attrs(atrybuty obiektu viewLoader), ngModel(treść notatki),
+                                    fileUpload, $http.
+
+                                </p>
+                                <p>Można także dodać 'script' w ustawieniach którejś z części notatki. Kod będzie wykonywany z tego samego miejsca co append-script.</p>
+                                <p>
+                                    <code>&lt;goto note-name='notatka tagi'&gt;&lt;/goto&gt;</code>
+                                    do linkowania do notatek
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
