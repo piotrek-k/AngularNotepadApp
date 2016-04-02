@@ -21,6 +21,7 @@ using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Http;
 using Newtonsoft.Json;
 using System.Security.Claims;
+using Microsoft.AspNet.Mvc;
 
 namespace ConsoleNotepad
 {
@@ -68,6 +69,11 @@ namespace ConsoleNotepad
                     options.UseSqlServer(Configuration["Data:AzureConnection:AuthConnectionString"]))
                 .AddDbContext<DataDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:AzureConnection:DataConnectionString"]));
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
 #endif
 
             services.AddIdentity<ApplicationUser, IdentityRole>(o =>
