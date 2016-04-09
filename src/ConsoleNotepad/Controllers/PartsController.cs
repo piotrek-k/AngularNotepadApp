@@ -5,11 +5,13 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using ConsoleNotepad.Models;
 using System;
+using Microsoft.AspNet.Authorization;
 
 namespace ConsoleNotepad.Controllers
 {
     [Produces("application/json")]
     [Route("api/Parts")]
+    [Authorize("Bearer")]
     public class PartsController : Controller
     {
         private DataDbContext _context;
