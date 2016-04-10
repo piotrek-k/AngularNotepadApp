@@ -3,7 +3,7 @@
         restrict: 'AE',
         require: 'ngModel',
         scope: {
-            ngModel: '=?',
+            ngModel: '=', //? - optional
             settings: '=partSettings'
         },
         link: function (scope, elem, attrs, ngModel) {
@@ -18,12 +18,8 @@
                 scope.viewAdress = scope.settings["view"] != undefined ? scope.settings["view"] : "";
                 scope.scriptAdress = scope.settings["script"] != undefined ? scope.settings["script"] : "";
 
-                if (scope.viewAdress != "") {
-                    reloadView(scope.viewAdress);
-                }
-                if (scope.scriptAdress != "") {
-                    loadScript(scope.scriptAdress);
-                }
+                reloadView(scope.viewAdress);
+                loadScript(scope.scriptAdress);
             }
 
             function reloadView(adress) {
@@ -41,29 +37,32 @@
                             if (data.length == 1) {
                                 var html = data[0].Data;
                                 elem.html(html);
-                                $compile(elem.contents()) (scope);
+                                $compile(elem.contents())(scope);
                             }
                             else {
-                                console.error("Nieprawidlowa ilosc partow: " +data.length);
-                        }
+                                console.error("Nieprawidlowa ilosc partow: " + data.length);
+                            }
+                        });
                     });
-                });
-            }
+                }
             }
 
             function loadScript(adress) {
-                notes.getByTag(adress).then(function (response) {
-                    var noteData = response.data;
-                    var currentNoteId = noteData.NoteId;
-                    parts.get(currentNoteId).success(function (data) {
-                        if (data.length == 1) {
-                            scope.evalFromParent(data[0].Data);
-                        }
-                        else {
-                            console.error("Nieprawidlowa ilosc partow: " +data.length);
-                    }
-                });
-            });
+                if (adress != undefined && adress != "") {
+                    notes.getByTag(adress).then(function (response) {
+                        var noteData = response.data;
+                        var currentNoteId = noteData.NoteId;
+                        parts.get(currentNoteId).success(function (data) {
+                            if (data.length == 1) {
+                                console.log("Script '" + adress + "' successfully loaded.");
+                                scope.evalFromParent(data[0].Data);
+                            }
+                            else {
+                                console.error("Nieprawidlowa ilosc partow: " + data.length);
+                            }
+                        });
+                    });
+                }
             }
 
             scope.evalFromParent = function (data) {
@@ -72,16 +71,16 @@
                 eval(data);
             }
 
-                //attrs.$observe('partSettings', function (newval) {
-                //    console.log("newval");
-                //    //console.table(newval);
+            //attrs.$observe('partSettings', function (newval) {
+            //    console.log("newval");
+            //    //console.table(newval);
 
-                //    if (scope.oldSettings["view"] != newval["view"]) {
-                //        reloadView(newval["view"]);
-                //    }
-                //    else {
-                //        console.log("brak zmian");
-                //    }
+            //    if (scope.oldSettings["view"] != newval["view"]) {
+            //        reloadView(newval["view"]);
+            //    }
+            //    else {
+            //        console.log("brak zmian");
+            //    }
             //});
         }
     };
