@@ -1,4 +1,5 @@
 ﻿/// <autosync enabled="true" />
+/// <reference path="../codewritteninapp/notebeautifier.js" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="angularpart/app.module.js" />
 /// <reference path="angularpart/app.routes.js" />

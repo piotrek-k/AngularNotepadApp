@@ -9,12 +9,13 @@
 }
 <style>
     body {
-        background-image: url("../../images/winter.jpg");
+        /*background-image: url("../../images/winter.jpg");*/
         color: white;
     }
 </style>
 
 <div class="loginBoxContainer">
+    <img class="bg" src="../../images/winter.jpg"/>
     <div class="loginBox">
 
         <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="" role="form">

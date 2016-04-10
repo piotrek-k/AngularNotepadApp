@@ -78,7 +78,9 @@
                             <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                             <div ng-if="noteType=='Code'">
                                 <p>GLOBAL_TOKEN - zmienna globalna gdzie przechowywany jest token</p>
-                                <p></p>
+                                <p>Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader jako html'owy obiekt), attrs(atrybuty obiektu viewLoader), ngModelValue(treść notatki),
+                                    fileUpload, $http.</p>
+                                <p>changeView(html) - nadpisuje view part'a</p>
                             </div>
                             <div ng-if="noteType=='View'" style="margin: 1rem">
                                 <p>
@@ -108,6 +110,13 @@
                 <input type="text" ng-model="currentNoteObject.TagsToAdd" />
                 <button ng-click="saveChangesToNote()">Zapisz</button>
                 <button ng-click="showNoteEditForm=false">Zamknij</button>
+            </div>
+
+            <div ng-if="noteType!='Code'&&noteType!='View'" style="margin: 1rem">
+                <p>
+                    Dodatkowe informacje:
+                </p>
+                <p>jsn[jakas notatka] - aby utworzyc link do aplikacji</p>
             </div>
 
             <!--Ikonki dodawania/usuwania okna-->

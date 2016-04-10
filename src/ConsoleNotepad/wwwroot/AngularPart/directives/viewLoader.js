@@ -7,6 +7,7 @@
             settings: '=partSettings'
         },
         link: function (scope, elem, attrs, ngModel) {
+            var ngModelValue = ngModel.$viewValue;
             //console.log("this");
             //console.dir(this);
             //console.table(attrs.partSettings);
@@ -20,6 +21,11 @@
 
                 reloadView(scope.viewAdress);
                 loadScript(scope.scriptAdress);
+            }
+
+            function changeView(html) {
+                elem.html(html);
+                $compile(elem.contents())(scope);
             }
 
             function reloadView(adress) {
