@@ -18,8 +18,13 @@
 
     $scope.$on('remotely-modify-window', function (e, args) {
         //uzywane przez windowsController
-        if(args.i == $scope.$index){
-            $scope.smartBar = args.noteName;
+        if (args.i == $scope.$index) {
+            if (args.noteName != undefined){
+                $scope.smartBar = args.noteName;
+            }
+            if ($scope.smartBar == undefined) {
+                $scope.smartBar = "";
+            }
             getPartsByTag();
         }
     });

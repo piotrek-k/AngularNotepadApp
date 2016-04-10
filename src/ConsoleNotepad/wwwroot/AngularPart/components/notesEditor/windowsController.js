@@ -19,7 +19,7 @@
         $scope.jumpToWindow(newIndex);
 
         $timeout(function () {
-            $scope.$broadcast('remotely-modify-window', { noteName: "" + openNote, i: newIndex });
+            $scope.$broadcast('remotely-modify-window', { noteName: openNote, i: newIndex });
         });
     }
 
