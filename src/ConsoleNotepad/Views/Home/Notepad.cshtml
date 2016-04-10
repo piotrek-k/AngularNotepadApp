@@ -27,12 +27,12 @@
 
                         <!--Ikonki po prawej-->
                         <div class="partDecorationRight">
-                            <div ng-if="p.localState=='OK'"><span class="glyphicon glyphicon-ok" aria-hidden="true" title="Zaaktualizowano"/></div>
-                            <div ng-if="p.localState=='Sending'"><span class="glyphicon glyphicon-export" aria-hidden="true" title="Wysyłanie..."></span></div>
-                            <div ng-if="p.localState=='Problem'"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Problem z zapisem"></span></div>
-                            <div ng-if="$index == activePart"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true" title="Ustawienia"></span></div>
-                            <div ng-if="p.Settings['view'] != undefined&&!p.displayData.showRaw"><span class="glyphicon glyphicon-console" title="RAW" ng-click="p.displayData.showRaw=true"></span></div>
-                            <div ng-if="p.Settings['view'] != undefined&&p.displayData.showRaw"><span class="glyphicon glyphicon-sunglasses" title="wyłącz RAW" ng-click="p.displayData.showRaw=false"></span></div>
+                            <div ng-if="p.localState=='OK'" class="iconsOnTheRight"><span class="glyphicon glyphicon-ok" aria-hidden="true" title="Zaaktualizowano" /></div>
+                            <div ng-if="p.localState=='Sending'" class="iconsOnTheRight"><span class="glyphicon glyphicon-export" aria-hidden="true" title="Wysyłanie..."></span></div>
+                            <div ng-if="p.localState=='Problem'" class="iconsOnTheRight"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Problem z zapisem"></span></div>
+                            <div ng-if="$index == activePart" class="iconsOnTheRight"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true" title="Ustawienia"></span></div>
+                            <div ng-if="p.displayData.isViewLoader&&!p.displayData.showRaw" class="iconsOnTheRight"><span class="glyphicon glyphicon-console" title="RAW" ng-click="p.displayData.showRaw=true"></span></div>
+                            <div ng-if="p.displayData.isViewLoader&&p.displayData.showRaw" class="iconsOnTheRight"><span class="glyphicon glyphicon-sunglasses" title="wyłącz RAW" ng-click="p.displayData.showRaw=false"></span></div>
                         </div>
 
                         <!--Ustawienia części notatki-->
@@ -60,20 +60,20 @@
                         </div>
 
                         <!--W przypadku ustalonego view-->
-                        <div ng-if="p.Settings['view'] != undefined">
+                        <div ng-if="p.Settings['view'] != undefined || p.Settings['script'] != undefined">
                             @*<font size="1" ng-click="focusedOnPart($index)">{{p.Settings['view']}}</font><br />*@
-                            <font size="1" ng-click="focusedOnPart($index)">
+                            <font size="1" ng-click="focusedOnPart($index)" style="display: block">
                                 <goto note-name="{{p.Settings['view']}}"></goto>
-                            </font><br />
-                            <font size="1" ng-click="focusedOnPart($index)">
+                            </font>
+                            <font size="1" ng-click="focusedOnPart($index)" style="display: block">
                                 <goto note-name="{{p.Settings['script']}}"></goto>
                             </font>
-                            <view-loader ng-if="!p.displayData.showRaw" ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
-                            <div ng-if="p.displayData.showRaw" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)"></div>
+                            <view-loader ng-init="p.displayData.isViewLoader=true" ng-show="!p.displayData.showRaw" ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
+                            <div ng-show="p.displayData.showRaw" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)"></div>
                         </div>
 
                         <!--W przypadku braku zdefiniowanego View, wyświetl zwykły text box-->
-                        <div ng-if="p.Settings['view'] == undefined">
+                        <div ng-if="p.Settings['view'] == undefined && p.Settings['script'] == undefined">
                             <div ng-if="noteType=='Normal'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
                             <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                             <div ng-if="noteType=='Code'">

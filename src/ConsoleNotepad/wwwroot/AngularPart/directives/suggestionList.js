@@ -34,7 +34,7 @@
                     //uzupełnij inputa, zacznij pisanie notatki
                     //console.table($scope.suggestions[$scope.highlightedSuggestion].NoteTags);
 
-                    if ($scope.highlightedSuggestion != -1) {
+                    if ($scope.highlightedSuggestion != -1 && $scope.highlightedSuggestion != undefined) {
                         //wybrano opcję z listy
                         oneOfSuggestionsChosen($scope.highlightedSuggestion);
                     }
