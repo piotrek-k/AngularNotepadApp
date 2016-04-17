@@ -70,7 +70,7 @@ namespace ConsoleNotepad.Controllers
             int pageSize = 10;
             if(page < 1) { page = 1; }
 
-            var history = _context.PartBackups.Where(x => x.OriginalPartID == idOfOriginalPart).Include(x=>x.OriginalPart).OrderBy(x => x.DateOfMakingBackup).Skip(pageSize*(page-1)).Take(pageSize).ToList();
+            var history = _context.PartBackups.Where(x => x.OriginalPartID == idOfOriginalPart).Include(x=>x.OriginalPart).OrderByDescending(x => x.DateOfMakingBackup).Skip(pageSize*(page-1)).Take(pageSize).ToList();
             foreach(var h in history)
             {
                 h.OriginalPart.PartHistory = null; //nie przesy³aj wiêcej danych
