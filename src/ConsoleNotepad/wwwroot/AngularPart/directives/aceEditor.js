@@ -34,6 +34,7 @@
             } else if (attrs.ace == "View") {
                 colorLanguage = "html";
             }
+
             console.log("language: " + colorLanguage);
             editor.getSession().setMode("ace/mode/" + colorLanguage);
 
@@ -59,6 +60,11 @@
 
                 resizeEditor(editor, elem);
             });
+
+
+            if (attrs.readonly == true || attrs.readonly == "true") {
+                editor.setReadOnly(true);
+            }
         }
     };
 }]);

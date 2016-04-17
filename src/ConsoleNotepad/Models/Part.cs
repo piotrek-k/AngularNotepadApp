@@ -17,7 +17,7 @@ namespace ConsoleNotepad.Models
         }
 
         public int ID { get; set; }
-        public int Type { get; set; }
+        //public int Type { get; set; } /*Tag.SpecialTypes*/
         public string Data { get; set; } /*Dane części notatki, zawartość wprowadzona przez użytkownika*/
         public string SettingsAsJSON { get; set; } /*Ustawienia wyświetlania*/
         public DateTime? CreationDate { get; set; }

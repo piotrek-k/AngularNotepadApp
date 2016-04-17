@@ -54,5 +54,6 @@ namespace ConsoleNotepad.Models
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<NoteTag> NoteTags { get; set; }
+        public DbSet<PartBackup> PartBackups { get; set; }
     }
 }

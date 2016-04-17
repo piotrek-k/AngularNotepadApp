@@ -8,9 +8,10 @@ using ConsoleNotepad.Models;
 namespace ConsoleNotepad.Migrations
 {
     [DbContext(typeof(DataDbContext))]
-    partial class DataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160417155333_test1")]
+    partial class test1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -54,6 +55,8 @@ namespace ConsoleNotepad.Migrations
 
                     b.Property<string>("SettingsAsJSON");
 
+                    b.Property<int>("Type");
+
                     b.HasKey("ID");
                 });
 
@@ -71,6 +74,8 @@ namespace ConsoleNotepad.Migrations
                     b.Property<int>("OriginalPartID");
 
                     b.Property<string>("SettingsAsJSON");
+
+                    b.Property<int>("Type");
 
                     b.HasKey("ID");
                 });

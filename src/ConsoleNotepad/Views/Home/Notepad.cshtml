@@ -10,6 +10,8 @@
             <!--windowId zawiera index renderowanego okna-->
             <suggestion-list ng-model="smartBar" input-id="smartBar{{windowId}}" input-class="smartBar" callback="suggestionListCallback"></suggestion-list>
 
+            <div ng-if="noteReadOnly" style="background-color: yellow; color:black;">Notatka "{{currentNoteObject.TagsAsSingleString}}" tylko do odczytu</div>
+
             <div id="noteParts">
 
                 <!--Komunikat gdy szukana notatka nie istnieje-->
@@ -30,9 +32,11 @@
                             <div ng-if="p.localState=='OK'" class="iconsOnTheRight"><span class="glyphicon glyphicon-ok" aria-hidden="true" title="Zaaktualizowano" /></div>
                             <div ng-if="p.localState=='Sending'" class="iconsOnTheRight"><span class="glyphicon glyphicon-export" aria-hidden="true" title="Wysyłanie..."></span></div>
                             <div ng-if="p.localState=='Problem'" class="iconsOnTheRight"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Problem z zapisem"></span></div>
-                            <div ng-if="$index == activePart" class="iconsOnTheRight"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true" title="Ustawienia"></span></div>
+                            <div ng-if="$index == activePart && !noteReadOnly" class="iconsOnTheRight"><span class="glyphicon glyphicon-cog" ng-click="p.displayData.showSettings?p.displayData.showSettings=false:p.displayData.showSettings=true" title="Ustawienia"></span></div>
                             <div ng-if="p.displayData.isViewLoader&&!p.displayData.showRaw" class="iconsOnTheRight"><span class="glyphicon glyphicon-console" title="RAW" ng-click="p.displayData.showRaw=true"></span></div>
                             <div ng-if="p.displayData.isViewLoader&&p.displayData.showRaw" class="iconsOnTheRight"><span class="glyphicon glyphicon-sunglasses" title="wyłącz RAW" ng-click="p.displayData.showRaw=false"></span></div>
+                            <div ng-if="!noteReadOnly"><span class="glyphicon glyphicon-book" title="Historia" ng-click="openHistory(p.ID)"></span></div>
+
                         </div>
 
                         <!--Ustawienia części notatki-->
@@ -49,6 +53,10 @@
                             </table>
                             <p>Dodaj nowe o nazwie: <input type="text" ng-model="addSetting" /><span class="glyphicon glyphicon-plus" ng-click="p.Settings[addSetting+'']=''"></span></p>
                             <button ng-click="p.displayData.showSettings=false">Zamknij</button>
+                        </div>
+
+                        <div ng-if="p.DateOfMakingBackup != undefined">
+                            Data utworzenia: {{p.DateOfMakingBackup | date:'medium'}}
                         </div>
 
                         <!--Szybkie ustawianie View (lista najczęściej używanych)-->
@@ -69,32 +77,15 @@
                                 <goto note-name="{{p.Settings['script']}}"></goto>
                             </font>
                             <view-loader ng-init="p.displayData.isViewLoader=true" ng-show="!p.displayData.showRaw" ng-model="p.Data" part-settings="p.Settings" ng-click="focusedOnPart($index)"></view-loader>
-                            <div ng-show="p.displayData.showRaw" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)"></div>
+                            <div ng-show="p.displayData.showRaw && !noteReadOnly" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)"></div>
+                            <div ng-show="p.displayData.showRaw && noteReadOnly">{{p.Data}}</div>
                         </div>
 
                         <!--W przypadku braku zdefiniowanego View, wyświetl zwykły text box-->
                         <div ng-if="p.Settings['view'] == undefined && p.Settings['script'] == undefined">
-                            <div ng-if="noteType=='Normal'" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
-                            <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
-                            <div ng-if="noteType=='Code'">
-                                <p>GLOBAL_TOKEN - zmienna globalna gdzie przechowywany jest token</p>
-                                <p>Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader jako html'owy obiekt), attrs(atrybuty obiektu viewLoader), ngModelValue(treść notatki),
-                                    fileUpload, $http.</p>
-                                <p>changeView(html) - nadpisuje view part'a</p>
-                            </div>
-                            <div ng-if="noteType=='View'" style="margin: 1rem">
-                                <p>
-                                    <code>&lt;append-script note-name=&quot;!code upload file&quot;&gt;&lt;/append-script&gt;</code>
-                                    do wczytywania skryptów. Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader), attrs(atrybuty obiektu viewLoader), ngModel(treść notatki),
-                                    fileUpload, $http.
-
-                                </p>
-                                <p>Można także dodać 'script' w ustawieniach którejś z części notatki. Kod będzie wykonywany z tego samego miejsca co append-script.</p>
-                                <p>
-                                    <code>&lt;goto note-name='notatka tagi'&gt;&lt;/goto&gt;</code>
-                                    do linkowania do notatek
-                                </p>
-                            </div>
+                            <div ng-if="noteType=='Normal' && !noteReadOnly" class="notePartEditable" ng-model="p.Data" contenteditable="true" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)">{{p.Data}}</div>
+                            <div ng-if="noteType=='Normal' && noteReadOnly" class="notePartEditable">{{p.Data}}</div>
+                            <div ng-if="noteType=='Code'||noteType=='View'" class="codeEditor" data-readonly="{{noteReadOnly}}" data-ace="{{noteType}}" ng-model="p.Data" ng-keydown="editingPartKeyDown($event, $index)" focus-on="{{'part' + $index + 'window' + windowId}}" ng-focus="focusedOnPart($index)"></div> <!--theOnlyPartData-->
                         </div>
                     </div>
                 </div>
@@ -117,6 +108,28 @@
                     Dodatkowe informacje:
                 </p>
                 <p>jsn[jakas notatka] - aby utworzyc link do aplikacji</p>
+                <p>%backup [id_parta] [strona]</p>
+            </div>
+            <div ng-if="noteType=='Code'">
+                <p>GLOBAL_TOKEN - zmienna globalna gdzie przechowywany jest token</p>
+                <p>
+                    Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader jako html'owy obiekt), attrs(atrybuty obiektu viewLoader), ngModelValue(treść notatki),
+                    fileUpload, $http.
+                </p>
+                <p>changeView(html) - nadpisuje view part'a</p>
+            </div>
+            <div ng-if="noteType=='View'" style="margin: 1rem">
+                <p>
+                    <code>&lt;append-script note-name=&quot;!code upload file&quot;&gt;&lt;/append-script&gt;</code>
+                    do wczytywania skryptów. Kod wykonywany na poziomie viewLoadera. Dostępne zmienne: scope, elem (viewLoader), attrs(atrybuty obiektu viewLoader), ngModel(treść notatki),
+                    fileUpload, $http.
+
+                </p>
+                <p>Można także dodać 'script' w ustawieniach którejś z części notatki. Kod będzie wykonywany z tego samego miejsca co append-script.</p>
+                <p>
+                    <code>&lt;goto note-name='notatka tagi'&gt;&lt;/goto&gt;</code>
+                    do linkowania do notatek
+                </p>
             </div>
 
             <!--Ikonki dodawania/usuwania okna-->

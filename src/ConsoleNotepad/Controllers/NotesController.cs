@@ -220,19 +220,22 @@ namespace ConsoleNotepad.Controllers
                 return HttpBadRequest(ModelState);
             }
 
-            Note note = db.Notes.Single(m => m.NoteId == id);
+            Note note = db.Notes.Include(x=>x.NoteTags).ThenInclude(y=>y.Tag).Single(m => m.NoteId == id);
 
             if (note == null)
             {
                 return HttpNotFound();
             }
 
-            if (AllowAccess(note.AuthorId, User.GetUserId()))
+            if (!AllowAccess(note.AuthorId, User.GetUserId()))
             {
                 return HttpUnauthorized();
             }
 
-            return Ok(note);
+            return Ok(JsonConvert.SerializeObject(note, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         // PUT: api/Notes/5

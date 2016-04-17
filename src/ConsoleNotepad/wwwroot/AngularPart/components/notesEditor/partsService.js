@@ -44,5 +44,15 @@
         });
     }
 
+    parts.history = function (id, page) {
+        return $http({
+            method: 'GET',
+            url: '/api/partshistory?idOfOriginalPart=' + id + '&page=' + page,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+    }
+
     return parts;
 }]);

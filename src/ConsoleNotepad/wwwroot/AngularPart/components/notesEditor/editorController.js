@@ -3,7 +3,8 @@
 
     $scope.suggestions = {};
     $scope.currentNoteId = 0;
-    $scope.currentNoteObject = {}; //wszystkie dane nt. aktualnie pokazywanej notatki
+    $scope.currentNoteObject = {}; //wszystkie dane nt. aktualnie pokazywanej notatki (pobrane z bazy)
+    $scope.noteReadOnly = false;
     var timeoutUpdate; //setTimeout to update Part
     $scope.activePart = 0;
 
@@ -16,10 +17,14 @@
         $scope.windowId = index;
     }
 
+    $scope.openHistory = function (idOfPart) {
+        $("#windowsContainer").scope().addWindow(undefined, "%backup " + idOfPart + " 1");
+    }
+
     $scope.$on('remotely-modify-window', function (e, args) {
         //uzywane przez windowsController
         if (args.i == $scope.$index) {
-            if (args.noteName != undefined){
+            if (args.noteName != undefined) {
                 $scope.smartBar = args.noteName;
             }
             if ($scope.smartBar == undefined) {
@@ -31,21 +36,21 @@
 
     //aktualizacja części notatki. Czeka kilka sekund zanim wyśle aktualizację.
     $scope.editingPartKeyDown = function (event, partObjIndex) {
+        if (!$scope.noteReadOnly) {
+            clearTimeout(timeoutUpdate);
+            timeoutUpdate = setTimeout(function () {
 
-        clearTimeout(timeoutUpdate);
-        timeoutUpdate = setTimeout(function () {
+                $scope.parts[partObjIndex].localState = "Sending";
 
+                parts.put($scope.parts[partObjIndex]).success(function () {
+                    $scope.parts[partObjIndex].localState = "OK";
+                }).error(function () {
+                    $scope.parts[partObjIndex].localState = "Problem";
+                });
+
+            }, 1000);
             $scope.parts[partObjIndex].localState = "Sending";
-
-            parts.put($scope.parts[partObjIndex]).success(function () {
-                $scope.parts[partObjIndex].localState = "OK";
-            }).error(function () {
-                $scope.parts[partObjIndex].localState = "Problem";
-            });
-
-        }, 1000);
-        $scope.parts[partObjIndex].localState = "Sending";
-
+        }
     }
 
     function getPartsByTag() {
@@ -56,44 +61,77 @@
                 $scope.smartBar = "";
             }
 
-            notes.getByTag($scope.smartBar).then(function (response) {
-                console.log("Note succesfully loaded: " + $scope.smartBar);
-                //console.dir(response);
-
-                $scope.currentNoteId = response.data.NoteId;
-                $scope.noteType = notes.typeToString(response.data.TypeOfNote);
-                $scope.currentNoteObject = response.data;
-
-                $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
-
-                    console.log("Parts succesfully loaded: " + $scope.currentNoteId);
-
-                    for (var p in data) {
+            if ($scope.smartBar.indexOf("%backup ") > -1) { //użytkownik chce pobrać historię part'a
+                var getNumbers = $scope.smartBar.match(/(?!(\s))[0-9]+(?=(\s|$))/gi);
+                var idOfBackup = getNumbers[0];
+                var pageOfBackup = getNumbers[1];
+                console.log("id of backup to take" + idOfBackup);
+                parts.history(idOfBackup, pageOfBackup).then(function (response) {
+                    $scope.noteReadOnly = true;
+                    var dataAboutPB = response.data;
+                    for (var p in dataAboutPB) {
 
                         //wygeneruj opcje ustawień
-                        if (data[p].SettingsAsJSON == undefined) {
-                            data[p].Settings = {};
+                        if (dataAboutPB[p].SettingsAsJSON == undefined) {
+                            dataAboutPB[p].Settings = {};
                         }
                         else {
-                            data[p].Settings = JSON.parse(data[p].SettingsAsJSON);
+                            dataAboutPB[p].Settings = JSON.parse(dataAboutPB[p].SettingsAsJSON);
                         }
 
-                        data[p].displayData = {}; //informacje o wyswietlaniu np. ustawien
+                        dataAboutPB[p].displayData = {}; //informacje o wyswietlaniu np. ustawien
                     }
 
-                    $scope.parts = data;
+                    $scope.parts = dataAboutPB;
 
-                    partsCheckForNull(); //jesli notatka nie ma partow, dodaj nowe
+                    notes.getOne(dataAboutPB[0].OriginalPart.NoteID).then(function (response) {
+                        $scope.noteType = notes.typeToString(response.data.TypeOfNote);
+                        $scope.currentNoteObject = response.data;
+                    }, function (response) { })
 
+                }, function (response) { });
+            }
+            else {
+                notes.getByTag($scope.smartBar).then(function (response) {
+                    console.log("Note succesfully loaded: " + $scope.smartBar);
+                    //console.dir(response);
+
+                    $scope.currentNoteId = response.data.NoteId;
+                    $scope.noteType = notes.typeToString(response.data.TypeOfNote);
+                    $scope.currentNoteObject = response.data;
+                    $scope.noteReadOnly = false;
+
+                    $scope.parts = parts.get($scope.currentNoteId).success(function (data) {
+
+                        console.log("Parts succesfully loaded: " + $scope.currentNoteId);
+
+                        for (var p in data) {
+
+                            //wygeneruj opcje ustawień
+                            if (data[p].SettingsAsJSON == undefined) {
+                                data[p].Settings = {};
+                            }
+                            else {
+                                data[p].Settings = JSON.parse(data[p].SettingsAsJSON);
+                            }
+
+                            data[p].displayData = {}; //informacje o wyswietlaniu np. ustawien
+                        }
+
+                        $scope.parts = data;
+
+                        partsCheckForNull(); //jesli notatka nie ma partow, dodaj nowe
+
+                    });
+
+                }, function (response) {
+                    if (response.status == 404) {
+                        //nie znaleziono notatki, mozna utworzyć nową
+                        console.log("Nie znaleziono żądanej notatki");
+                        $scope.askToAddNewNote = $scope.smartBar; //wyswietl menu dodawania nowej
+                    }
                 });
-
-            }, function (response) {
-                if (response.status == 404) {
-                    //nie znaleziono notatki, mozna utworzyć nową
-                    console.log("Nie znaleziono żądanej notatki");
-                    $scope.askToAddNewNote = $scope.smartBar; //wyswietl menu dodawania nowej
-                }
-            });
+            }
         });
     }
 

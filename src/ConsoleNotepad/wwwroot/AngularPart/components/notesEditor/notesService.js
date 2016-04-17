@@ -82,6 +82,22 @@
         });
     }
 
+    notes.getOne = function (id) {
+        return $http({
+            method: 'GET',
+            url: '/api/notes/'+id,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(function (response) {
+            //success
+            return response;
+        }, function (response) {
+            //error
+            throw response;
+        });
+    }
+
     notes.post = function (data) {
         return $http({
             method: 'POST',

@@ -8,9 +8,14 @@ namespace ConsoleNotepad.Models
 {
     public class PartBackup
     {
-        public PartBackup(Part partToCopy)
+        public PartBackup()
         {
-            Type = partToCopy.Type;
+            
+        }
+
+        public void Define(Part partToCopy)
+        {
+            //Type = partToCopy.Type;
             Data = partToCopy.Data;
             SettingsAsJSON = partToCopy.SettingsAsJSON;
             OrderPosition = partToCopy.OrderPosition;
@@ -19,7 +24,7 @@ namespace ConsoleNotepad.Models
         }
 
         public int ID { get; set; }
-        public int Type { get; set; }
+        //public int Type { get; set; } /*Tag.SpecialTypes*/
         public string Data { get; set; } /*Dane części notatki, zawartość wprowadzona przez użytkownika*/
         public string SettingsAsJSON { get; set; } /*Ustawienia wyświetlania*/
         public int OrderPosition { get; set; }
