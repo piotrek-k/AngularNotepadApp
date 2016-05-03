@@ -8,6 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{066DEE34-B4C9-482F-B58D-FD7CA1D6D9BB}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		README.md = README.md
+		screenshot.png = screenshot.png
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ConsoleNotepad", "src\ConsoleNotepad\ConsoleNotepad.xproj", "{B6E291B0-C809-4CEA-A172-2415DB2DC5AC}"
