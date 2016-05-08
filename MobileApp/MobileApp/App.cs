@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobileApp.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,22 +10,12 @@ namespace MobileApp
 {
     public class App : Application
     {
+        public static string token;
         public App()
         {
             // The root page of your application
-            MainPage = new ContentPage
-            {
-                Content = new StackLayout
-                {
-                    VerticalOptions = LayoutOptions.Center,
-                    Children = {
-                        new Label {
-                            XAlign = TextAlignment.Center,
-                            Text = "Welcome to Xamarin Forms!"
-                        }
-                    }
-                }
-            };
+            token = "costam";
+            MainPage = new NavigationPage(new Windows());
         }
 
         protected override void OnStart()
